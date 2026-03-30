@@ -9,7 +9,8 @@
 
 ## Table of Contents
 
-1. [Architecture Overview](#1-architecture-overview)
+1. [**Prompt to Portal** (Start Here)](./PROMPT_TO_PORTAL.md) — From idea to live URL in 7 steps
+2. [Architecture Overview](#1-architecture-overview)
 2. [Platform Accounts & Authentication](#2-platform-accounts--authentication)
 3. [GitHub Setup](#3-github-setup)
 4. [Firebase Setup](#4-firebase-setup)
@@ -526,7 +527,11 @@ This is the complete end-to-end flow that connects all platforms:
 ┌─────────────────────────────────────────────────────────────┐
 │                    THE DEVELOPMENT LOOP                      │
 │                                                              │
-│  1. DESIGN (Lovable)                                        │
+│  0. DESIGN SYSTEM (Google Stitch)                           │
+│     └── Generate UI screens from prompts                    │
+│     └── Extract design tokens → DESIGN.md                   │
+│                                                              │
+│  1. DESIGN (Lovable — optional alternative)                  │
 │     └── Create/iterate UI visually                          │
 │     └── Lovable pushes PR to GitHub                         │
 │                                                              │

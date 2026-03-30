@@ -16,6 +16,7 @@ platform-integration/
 ├── INDEX.md                        ← YOU ARE HERE
 │
 │── ──── DOCUMENTATION ──── ────
+├── PROMPT_TO_PORTAL.md             ★ Start Here — Idea to live URL in 7 steps
 ├── README.md                       Platform overview (35 KB)
 ├── NEW_PROJECT_GUIDE.md            Full A-to-Z project setup (40 KB, 10 phases)
 ├── AUTH_FLOW.md                    Every credential & token (28 KB, 11 sections)
