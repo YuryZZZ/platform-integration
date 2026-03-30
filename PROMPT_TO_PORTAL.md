@@ -1,249 +1,131 @@
 # Prompt to Portal — End-to-End Walkthrough
 
-> **Purpose**: The complete, linear flow from "I have an idea" to "here's your live URL".
-> Follow these steps in order. Each step produces an artifact that feeds the next.
+> **Purpose**: The complete, linear flow from "I have an idea" to "here is your live URL".
+> This walkthrough covers both **Lovable** (rapid visual iteration) and **Google Stitch** (design-system-driven generation). Follow the path that best fits your project.
 >
 > **Time**: ~30 minutes for a new project, ~10 minutes for a new screen on an existing project.
 
 ---
 
-## The Flow at a Glance
+## Two Primary Paths to Production
 
+Depending on your workflow preference, choose between:
+
+### Path A: The Lovable Flow (Rapid Prototyping)
+Best for: Highly visual builders who want instant preview panels, drag-and-drop combined with chat, and deep GitHub two-way synchronization.
 ```
- IDEA → STITCH → DESIGN.md → ANTIGRAVITY → GITHUB → FIREBASE → LIVE URL
-  (1)     (2)       (3)          (4)          (5)       (6)        (7)
+ IDEA → LOVABLE ↔ GITHUB ↔ ANTIGRAVITY IDE → FIREBASE → LIVE URL
+```
+
+### Path B: The Google Stitch Flow (Design System Driven)
+Best for: Teams starting with a rigid Google design system (Colors, Typography, Layouts) and wanting AI IDE agents to scaffold components strictly adhering to `DESIGN.md`.
+```
+ IDEA → STITCH → DESIGN.md → ANTIGRAVITY IDE → GITHUB → FIREBASE → LIVE URL
 ```
 
 ---
 
-## Step 1: Define Your Idea (2 min)
+## PATH A: The Lovable Flow (Step-by-Step)
 
-Write a plain-English prompt describing what you want to build.
+### Step 1: Ideate and Prototype in Lovable (10 min)
+1. Go to [lovable.dev](https://lovable.dev).
+2. Create a new prompt: *"A dashboard for monitoring GCP costs with charts, alerts, and a drill-down by service."*
+3. Lovable will scaffold a complete Vite/React application instantly.
+4. Iterate visually using chat commands inside the Lovable web editor.
 
-**Example prompts:**
-```
-"A construction document management portal with login, project list,
- PDF viewer with annotations, and real-time collaboration."
-```
+### Step 2: Push to GitHub via Two-Way Sync (1 min)
+Lovable connects directly to GitHub.
+1. Click **Connect to GitHub** in the top right of your Lovable project.
+2. Select your repository (`YOUR_USER/YOUR_REPO`).
+3. Lovable will export the codebase and push a PR (or commit directly to `main`/`master`) containing all generated React code and Tailwind styles.
 
-```
-"A dashboard for monitoring GCP costs with charts, alerts, and
- a drill-down by service."
-```
-
-> **Tip**: Be specific about the screens you need. Each screen becomes a
-> Stitch design → a React component → a route in your app.
-
----
-
-## Step 2: Generate UI in Google Stitch (5 min)
-
-Open Stitch and create your designs from the prompt.
-
-### Option A: Via Antigravity (recommended)
-```
-"Create a new Stitch project called 'My Portal' and generate screens for:
- 1. Login page with Google auth
- 2. Dashboard with KPI cards and sidebar nav
- 3. Project list with search and filters
- 4. Document viewer with PDF annotations"
-```
-
-This calls the Stitch MCP tools automatically:
-- `create_project` → creates the Stitch project
-- `create_design_system` → sets colors, fonts, shapes
-- `generate_screen_from_text` → generates each screen
-
-### Option B: Via Stitch web UI
-1. Go to [stitch.google.com](https://stitch.google.com)
-2. Create a new project
-3. Set your design system (colors, fonts, corner radius)
-4. Generate screens from prompts
-
-**Output**: A Stitch project with screens and a design system.
-
----
-
-## Step 3: Generate DESIGN.md (2 min)
-
-Extract the design tokens from Stitch into a machine-readable file that
-locks all future code generation to your visual identity.
-
-```
-"Generate a DESIGN.md from my Stitch project"
-```
-
-This activates the `design-md` skill, which:
-1. Reads your Stitch project's design system via MCP
-2. Extracts colors, typography, spacing, shapes, states
-3. Writes `docs/DESIGN.md` to your repo
-
-**Output**: `docs/DESIGN.md` — your design system source of truth.
-
-> If you don't use Stitch, create DESIGN.md manually from the
-> [template](./starter-kit/docs/DESIGN.md).
-
----
-
-## Step 4: Scaffold Code in Antigravity (10 min)
-
-Now Antigravity generates production code that follows your design system.
-
-### 4a. Initialize the project (first time only)
+### Step 3: Pull & Extend in Antigravity IDE (10 min)
+Now, bring the visual prototype into your local development environment to add real logic.
 ```powershell
-# Clone the starter kit
-git clone https://github.com/YuryZZZ/platform-integration.git
-cd platform-integration/starter-kit
-./init.ps1
+# 1. Pull Lovable changes
+git fetch origin master
+git pull origin master --ff-only
+
+# 2. Add real backend logic using your local IDE agent
+"Antigravity, review the new Lovable components in web/src/. 
+ Replace the mock data in the Cost Dashboard with live Firestore real-time listeners. 
+ Add Firebase Auth to the login view."
 ```
 
-### 4b. Generate React components from Stitch screens
+*(Note: If Lovable authored the project using Supabase, you can keep it, or see [lovable-sync.md](./workflows/lovable-sync.md) for how to swap it to Firebase).*
+
+### Step 4: Deploy to Firebase Hosting (3 min)
+```powershell
+# Build the UI
+cd web && npx next build  # (Or Vite: npm run build)
+
+# Deploy to Firebase
+cd .. && npx firebase-tools deploy --only hosting --project YOUR_PROJECT_ID
 ```
-"Scaffold React components from the DESIGN.md for all screens
+
+---
+
+## PATH B: The Google Stitch Flow (Step-by-Step)
+
+### Step 1: Generate UI in Google Stitch (5 min)
+Open Stitch to establish your design identity.
+```
+"Antigravity, create a new Stitch project called 'My Portal' and generate screens for:
+ 1. Login page with Google auth
+ 2. Dashboard with KPI cards"
+```
+*This invokes Stitch MCP tools: `create_project` → `create_design_system` → `generate_screen_from_text`.*
+
+### Step 2: Lock the Design Tokens via `DESIGN.md` (2 min)
+```
+"Antigravity, generate a DESIGN.md from my Stitch project"
+```
+*This extracts colors, typography, shapes, and structural grids into `docs/DESIGN.md`, ensuring all future code structurally matches the design.*
+
+### Step 3: Scaffold Code in Antigravity (10 min)
+```
+"Scaffold React components from the DESIGN.md for all screens 
  in my Stitch project. Use the react-components skill."
 ```
+Antigravity automatically respects your `docs/DESIGN.md` limits while building out the components locally. Follow up with commands to wire the components to Firestore and Auth.
 
-This activates the `react-components` skill, which:
-1. Reads `docs/DESIGN.md` for visual constraints
-2. Reads each Stitch screen for layout and content
-3. Generates React + CSS components matching the design
-4. Creates route files for each screen
-
-### 4c. Add backend logic
-```
-"Create a Firebase auth login flow for the Login screen.
- Use Firestore for the project list data.
- Add real-time listeners for the document viewer."
-```
-
-### 4d. Verify locally
+### Step 4: Push and Deploy (3 min)
 ```powershell
-npm run dev
-# Opens at http://localhost:3000
-```
-
-**Output**: A working local app with all screens, routes, auth, and data.
-
----
-
-## Step 5: Push to GitHub (1 min)
-
-```powershell
-git add -A
-git commit -m "feat: initial portal with Stitch designs"
-git push origin master
-```
-
-**Output**: Code on GitHub, ready for CI/CD.
-
----
-
-## Step 6: Deploy to Firebase Hosting (3 min)
-
-```powershell
-# Build
-npm run build
+# Commit your newly scaffolded logic
+git add -A && git commit -m "feat: initial stitch portal" && git push origin master
 
 # Deploy
-npx firebase-tools deploy --only hosting --project YOUR_PROJECT_ID
+npx firebase-tools deploy --only hosting
 ```
-
-### Alternative: Deploy to Vercel
-```powershell
-npx vercel --prod
-```
-
-> See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) for staging branches and edge config.
-
-**Output**: A live URL.
 
 ---
 
-## Step 7: Verify the Live Portal (2 min)
+## Step 5: Verification (Common Step For Both Paths)
 
-Antigravity automatically verifies the deployment:
+Whether you used Lovable or Stitch, verify your deployment autonomously.
+
+Ask Antigravity:
 ```
-"Navigate to https://your-project.web.app and take a screenshot.
- Check that the login page renders correctly."
+"Navigate to https://your-project.web.app/ in the browser and take a screenshot.
+ Check that the login page renders correctly and console errors are absent."
 ```
 
-Or in Antigravity terminal:
+Or run the predefined workflow:
 ```powershell
 /verify-pyramid
 ```
 
-**Output**: Visual confirmation + health check. Your portal is live.
+**Output**: Visual confirmation + health check. Your portal is live and ready for users.
 
 ---
 
-## The Complete Map
+## Quick Comparison: Which Tool Does What?
 
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│  1. IDEA    │    │  2. STITCH  │    │  3. DESIGN  │
-│  (Prompt)   │───▶│  (UI Gen)   │───▶│  (DESIGN.md)│
-└─────────────┘    └─────────────┘    └──────┬──────┘
-                                             │
-                                             ▼
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│ 7. VERIFY   │    │ 6. DEPLOY   │    │ 4. CODE     │
-│ (Screenshot)│◀───│ (Firebase/  │◀───│ (Antigravity│
-│             │    │  Vercel)    │    │  + Skills)  │
-└─────────────┘    └──────┬──────┘    └──────┬──────┘
-                          │                  │
-                          │           ┌──────┴──────┐
-                          │           │ 5. GITHUB   │
-                          └───────────│ (Push+CI/CD)│
-                                      └─────────────┘
-```
-
----
-
-## Iteration Loop (Adding Screens / Features)
-
-After the initial deploy, adding new screens follows the same flow but faster:
-
-```
-"Add a settings page to my Stitch project with user profile,
- notification preferences, and API key management"
-```
-
-Then:
-1. Stitch generates the screen → `generate_screen_from_text`
-2. DESIGN.md stays the same (tokens are locked)
-3. Antigravity scaffolds the new component + route
-4. `git push` → Firebase auto-deploys (if CI/CD configured)
-
----
-
-## Lovable Alternative Path
-
-If you start in Lovable instead of Stitch:
-
-```
- IDEA → LOVABLE → GITHUB PR → ANTIGRAVITY → FIREBASE → LIVE
-```
-
-1. Design in Lovable (visual drag-and-drop)
-2. Lovable creates a GitHub PR with generated code
-3. Antigravity pulls the PR, swaps Supabase → Firebase (if needed)
-4. Apply DESIGN.md tokens for consistency
-5. Deploy
-
-> See [workflows/lovable-sync.md](./workflows/lovable-sync.md) for the full Lovable workflow.
-
----
-
-## Quick Reference: Which Tool Does What
-
-| Step | Tool | What It Produces |
-|------|------|-----------------|
-| Idea | You | Natural language prompt |
-| UI Design | **Google Stitch** | High-fidelity screens + design system |
-| Design Tokens | **design-md skill** | `DESIGN.md` (machine-readable) |
-| Code | **Antigravity** | React components, routes, auth, data |
-| Backend | **Antigravity** | Firebase/Firestore integration |
-| Heavy Refactors | **Jules** | Async PRs from cloud VMs |
-| Version Control | **GitHub** | Source of truth + CI/CD |
-| Hosting | **Firebase** or **Vercel** | Live URL |
-| Verification | **Antigravity + Playwright** | Screenshots + health checks |
+| Feature / Step      | Lovable Flow                                      | Stitch Flow                                    |
+|---------------------|---------------------------------------------------|------------------------------------------------|
+| **Starting Point**  | Visual prototyping environment (`lovable.dev`)      | Conceptual design constraints (`stitch.google`) |
+| **Code Generation** | Cloud-native via Lovable's engine                 | Local via Antigravity utilizing `DESIGN.md`    |
+| **Version Control** | Two-way GitHub sync (push/pull directly)          | Manual local `git commit / push`               |
+| **Design Control**  | Fluid visual tweaks in-browser                    | Deterministic application of tokens             |
+| **Backend Integration** | Antigravity IDE (Local)                         | Antigravity IDE (Local)                        |
+| **Deployment Target** | Vercel, Netlify, Firebase                       | Firebase Hosting, Cloud Run                    |
