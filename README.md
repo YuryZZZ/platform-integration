@@ -18,7 +18,7 @@
 6. [Antigravity (IDE) Setup](#6-antigravity-ide-setup)
 7. [Thread Stitcher (Cross-Platform Data Pipeline)](#7-thread-stitcher)
 7b. [Google Stitch (UI Design Platform)](#7b-google-stitch) → See [STITCH_DESIGN.md](./STITCH_DESIGN.md)
-7c. [Agent-to-Agent Protocol (A2A) — Roadmap](#7b-agent-to-agent-protocol-a2a--roadmap)
+7c. [Agent-to-Agent Protocol (A2A) — Production Ready](#7b-agent-to-agent-protocol-a2a--production-ready)
 8. [The Full Development Loop](#8-the-full-development-loop)
 9. [Deployment Pipeline](#9-deployment-pipeline)
 10. [Troubleshooting](#10-troubleshooting)
@@ -26,6 +26,21 @@
 
 **See also:** [JULES_INTEGRATION.md](./JULES_INTEGRATION.md) · [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) · [STITCH_DESIGN.md](./STITCH_DESIGN.md)
 
+### Design Template Prompt Guides (in `Portals/Design/docs/`)
+
+The Design template contains 5 prompt guides consumed by Antigravity's IDE Expansion Engine:
+
+| Guide | Purpose |
+|-------|---------|
+| `STITCH_PROMPT_GUIDE.md` | UI generation modes, voice design, precision limitations |
+| `LOVABLE_PROMPT_GUIDE.md` | `.lovable/` folder, Plan Mode, Agent Mode safety |
+| `FIREBASE_PROMPT_GUIDE.md` | v9 SDK rules, App Hosting (GA), health checks |
+| `JULES_PROMPT_GUIDE.md` | Async delegation, Critic Agent, 60-task parallelism |
+| `PAYLOAD_PROMPT_GUIDE.md` | Payload CMS 3 (control plane), Local API safety, RLS boundary |
+
+Additional Design template docs: `RISK_REGISTER.md` (13 tracked risks), `TESTING.md` (7-surface Playwright matrix), `COMPETITOR_RESEARCH.md` (market intelligence template).
+
+---
 ---
 
 ## 1. Architecture Overview
@@ -474,14 +489,14 @@ WHERE extraction_method = 'thread_stitcher'
 
 ---
 
-## 7b. Agent-to-Agent Protocol (A2A) — Roadmap
+## 7b. Agent-to-Agent Protocol (A2A) — Production Ready
 
-> **Status**: Planned. Not yet implemented.
+> **Status**: Production-ready. Donated to Linux Foundation (June 2025). Supported by 150+ organizations including Google, Salesforce, SAP, ServiceNow, and Atlassian.
 
 The [A2A protocol](https://github.com/google/A2A) enables horizontal agent collaboration —
 agents discovering and delegating tasks to each other without human routing.
 
-### How It Will Work
+### How It Works
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -500,22 +515,20 @@ agents discovering and delegating tasks to each other without human routing.
 | Protocol | Direction | Purpose | Status |
 |----------|-----------|---------|--------|
 | **MCP** | Vertical (agent → tool) | Agent accesses databases, APIs, services | ✅ Active |
-| **A2A** | Horizontal (agent → agent) | Agents delegate tasks to each other | 📋 Planned |
+| **A2A** | Horizontal (agent → agent) | Agents delegate tasks to each other | ✅ Production |
 
 ### Key Concepts
 
 - **Agent Cards**: JSON manifests at `/.well-known/agent-card.json` that advertise capabilities
 - **Self-Discovery**: Agents find each other by reading Agent Cards
-- **Task Delegation**: Antigravity could delegate "refactor all tests" to Jules automatically
+- **Task Delegation**: Antigravity can delegate "refactor all tests" to Jules automatically
 - **Multi-Modal**: Agents can exchange text, code, images, and structured data
+- **MCP Gateways**: Production systems use centralized gateways for auth, observability, and security policy enforcement across both protocol layers
 
-### When This Will Matter
+### Integration Status
 
-- When you have 3+ agents working on the same project simultaneously
-- When Antigravity needs to auto-route heavy tasks to Jules without `/jules` CLI
-- When Stitch design changes need to auto-trigger code regeneration in Antigravity
-
-> For now, use **MCP** for tool access and **CLI commands** (`/jules`) for agent delegation.
+- MCP: **Use now** for all tool access (databases, APIs, services)
+- A2A: **Available** for agent-to-agent delegation. Currently, CLI commands (`/jules`) remain the simplest path. Full A2A routing is supported but optional.
 
 ---
 

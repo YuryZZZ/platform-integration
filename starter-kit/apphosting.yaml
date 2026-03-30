@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────────────────────
+# Firebase App Hosting Configuration
+# ─────────────────────────────────────────────────────────────
+# This file configures Firebase App Hosting (GA) for Next.js.
+# App Hosting auto-provisions Cloud Run, Cloud Build, and CDN.
+#
+# See: https://firebase.google.com/docs/app-hosting
+# ─────────────────────────────────────────────────────────────
+
+runConfig:
+  minInstances: 0
+  maxInstances: 10
+  cpu: 1
+  memoryMiB: 512
+  concurrency: 80
+
+env:
+  - variable: NEXT_PUBLIC_SERVER_URL
+    value: https://your-project.web.app
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: your-firebase-project
+
+  # Secret environment variables (from Cloud Secret Manager)
+  - variable: NEXTAUTH_SECRET
+    secret: nextauth-secret
+  - variable: DATABASE_URL
+    secret: database-url

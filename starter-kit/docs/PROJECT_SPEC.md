@@ -32,16 +32,16 @@ providing hybrid search, evidence assembly, and AI-powered document analysis._
 
 | Layer          | Technology            | Purpose                    |
 | -------------- | --------------------- | -------------------------- |
-| **Frontend**   | Next.js (App Router)  | Static export → Firebase   |
+| **Frontend**   | Next.js (App Router)  | Full-stack React framework |
 | **Styling**    | Tailwind CSS          | Utility-first CSS          |
-| **Backend**    | FastAPI (Python)      | Cloud Run microservices    |
+| **Backend**    | Cloud Functions / Run | Serverless microservices   |
 | **Database**   | BigQuery / Firestore  | Analytics / real-time data |
-| **Hosting**    | Firebase Hosting      | Static CDN delivery        |
+| **Hosting**    | Firebase App Hosting  | Auto-provisioned Cloud Run + CDN |
 | **Auth**       | Firebase Auth         | User authentication        |
-| **AI**         | Gemini 3 Pro          | Reasoning, generation      |
+| **AI**         | Gemini 3.1 Pro        | Reasoning, generation      |
 | **Design**     | Google Stitch         | AI UI design               |
 | **IDE**        | Antigravity           | Agent-first development    |
-| **Async Agent**| Jules                 | Cloud VM code tasks        |
+| **Async Agent**| Jules                 | Cloud VM tasks (60 parallel) |
 
 ### Deploy Units
 
@@ -61,6 +61,19 @@ Each function has its own `deploy.ps1`. **Never deploy repo root.**
 | Collection/Table | Purpose              | Schema Link |
 | ---------------- | -------------------- | ----------- |
 |                  |                      |             |
+
+---
+
+## Data Layer Map (Hard Boundary)
+
+> **Rule:** Never use Firestore for platform internals. Never use PostgreSQL for generated sites.
+
+| Layer | Database | Purpose | Access Pattern |
+|-------|----------|---------|----------------|
+| **Layer 1 — Control Plane** | PostgreSQL 16 | Internal platform data (prompts, tenants, audit logs, embeddings) | Payload Local API (server-only) |
+| **Layer 2 — Generated Site Runtime** | Firebase (Firestore, Auth, Hosting) | Per-site user data, authentication, deployment | Firebase SDK (client + server) |
+
+This boundary is hard and intentional. Architecture review required before any cross-layer data access.
 
 ---
 

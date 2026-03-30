@@ -29,6 +29,31 @@ Best for: Developers who want to stay entirely inside the Antigravity IDE chat w
 
 ---
 
+## Step 0.5: Competitor Research (Common — Both Paths)
+
+Before building anything, feed a competitor's live site into the AI for market intelligence:
+```
+"Read the content from https://COMPETITOR-SITE.com/ and produce a Market Intelligence
+ Report covering their messaging, SEO structure, design patterns, and trust signals.
+ Use this to inform our DESIGN.md and initial screen prompts."
+```
+> Antigravity uses its built-in `read_url_content` tool. No external API needed.
+> For structured extraction, optionally integrate [FireCrawl](https://firecrawl.dev).
+
+---
+
+## Step 0.7: Generate Visual Assets (Common — Both Paths)
+
+Generate hero images, product mockups, and brand assets inline:
+```
+"Generate a hero image for a premium construction management portal.
+ Dark background, isometric 3D view. Professional aesthetic matching DESIGN.md."
+```
+> For scroll-bound animations, generate two states (before/after) and use a
+> video generation tool (Higgsfield, Runway, Luma) to create a transition video.
+
+---
+
 ## PATH A: The Lovable Flow (Step-by-Step)
 
 ### Step 1: Ideate and Prototype in Lovable (10 min)
@@ -58,12 +83,18 @@ git pull origin master --ff-only
 
 *(Note: If Lovable authored the project using Supabase, you can keep it, or see [lovable-sync.md](./workflows/lovable-sync.md) for how to swap it to Firebase).*
 
-### Step 4: Deploy to Firebase Hosting (3 min)
-```powershell
-# Build the UI
-cd web && npx next build  # (Or Vite: npm run build)
+### Step 4: Deploy to Firebase (3 min)
 
-# Deploy to Firebase
+**Option A — Firebase App Hosting (Recommended for Next.js):**
+```powershell
+# One-time setup: connects GitHub repo → auto-provisions Cloud Run + CDN
+firebase apphosting:backends:create --project YOUR_PROJECT_ID --location us-central1
+# All future deploys are triggered automatically by `git push`
+```
+
+**Option B — Traditional Firebase Hosting (static sites):**
+```powershell
+cd web && npx next build
 cd .. && npx firebase-tools deploy --only hosting --project YOUR_PROJECT_ID
 ```
 
@@ -110,9 +141,22 @@ If you need to make massive changes across 50 files (e.g., migrating a database 
 ```powershell
 # Commit your newly scaffolded logic
 git add -A && git commit -m "feat: initial stitch portal" && git push origin master
+```
 
-# Deploy
-npx firebase-tools deploy --only hosting
+**Firebase App Hosting (recommended):** Deploys automatically on push if connected.
+**Manual deploy:** `npx firebase-tools deploy --only hosting`
+
+---
+
+## Step 4.5: QA Audit — Accessibility & SEO (Common — Both Paths)
+
+Before final verification, run an automated quality audit:
+```
+"Run a comprehensive QA audit on the entire codebase:
+ 1. ACCESSIBILITY: Scan for missing ARIA labels, heading hierarchy, alt text, contrast
+ 2. SEO: Verify every page has title, meta description, canonical URL, OG tags
+ 3. PERFORMANCE: Check for unlazy images, unoptimized fonts, render-blocking scripts
+ Fix all issues automatically and report what was found."
 ```
 
 ---
