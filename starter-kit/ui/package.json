@@ -1,0 +1,13 @@
+{
+  "name": "project-validator",
+  "version": "1.0.0",
+  "description": "Parallel browser validation for all project pages",
+  "scripts": {
+    "validate": "node validate-parallel.js",
+    "validate:single": "node validate.js",
+    "install-browsers": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.45.0"
+  }
+}
