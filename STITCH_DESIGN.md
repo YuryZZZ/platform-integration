@@ -38,6 +38,27 @@ tools (Figma, Sketch) that output static vector graphics, Stitch generates:
 - **Design tokens** — colors, typography, spacing, shape
 - **Functional component specifications** — state behaviors, interactions
 - **Code-ready output** — React components, not just mockups
+- **Figma export** — retaining layers and Auto Layout
+- **Instant Prototypes** — stitch static screens into clickable interactive flows
+
+### Generation Modes (March 2026)
+
+| Mode | Model | Best For |
+|------|-------|----------|
+| **Ideate** | Fast exploration | Diverging on ideas, early brainstorming |
+| **Flash** | Speed-optimized | Rapid iteration, quick variants |
+| **Thinking** | Gemini 2.5 Pro | High-fidelity, production-quality output |
+
+### Design Agent & Voice Canvas
+
+Stitch now includes a **Design Agent** that tracks your full project history and reasons
+across the entire workflow (not just single prompts), providing far better consistency.
+You can also interact with the canvas via **voice** — critique designs, request variations,
+or interview the agent to define product requirements.
+
+> **⚠️ Precision Limitation**: Vibe design fails at precision. "Make the button 2px bigger"
+> is a spec, not a vibe. Always treat Stitch output as a **starting scaffold**. Route all
+> precision work through the component override system or direct code editing in Antigravity.
 
 ### How It Fits in the Stack
 

@@ -1,0 +1,877 @@
+Nexus Ai Readme
+Nexus AI Platform
+⚠️ Critical Tool Status — Read Before Starting
+
+These are live tool decisions as of March 2026. Act on the red items immediately.
+
+Tool	Status	Action Required
+Firebase Studio IDE	🔴 Sunsetting — accessible until March 22, 2027 only. All data deleted after that date.	Audit all workspaces now. Run migration bridge. Migrate everything to GitHub + Antigravity by Month 6.
+Firebase Backend Services (Auth, Firestore, Hosting, App Hosting, Cloud Run, Secret Manager)	✅ Fully stable — no changes announced	Keep as the deployment and runtime services layer for every generated site
+Google Stitch	✅ Expanded March 2026 — MCP server live, DESIGN.md, Antigravity export, vibe design, voice canvas	Primary UI design generation layer
+Antigravity	✅ Public preview — agent-first IDE, Gemini 3 Pro, 76.2% SWE-bench	Primary agentic code execution and iteration layer
+Lovable	✅ Active — $75M ARR, 30,000+ paying users, Agent Mode, GitHub sync from day one	Rapid full-stack MVP generation layer
+GitHub	✅ Stable	Source control, CI/CD, repo management, webhook receiver
+PostgreSQL + Payload CMS	✅ Nexus control plane — internal governance, prompts, tenants, RAG	Never replaced by Firestore. Separate concern entirely. See Data Layer Map.
+🧠 What Is Nexus AI?
+
+Nexus AI is not a single finished website. It is a headless, serverless, multi-surface site-building framework — the operational engine that generates, deploys, and governs any site, for any client or product, from one central control plane.
+
+The framework wires five layers into a single orchestrated pipeline:
+
+User describes a site in plain language
+           │
+           ▼
+┌──────────────────────┐
+│   STITCH (Design)    │  Generates screens, DESIGN.md, React/Tailwind
+│   stitch.withgoogle  │  exports via MCP into the repo
+└──────────┬───────────┘
+           │ MCP export → DESIGN.md committed to repo root
+           ▼
+┌──────────────────────┐
+│  ANTIGRAVITY (Code)  │  Reads DESIGN.md + repo context, plans,
+│  Agent-first IDE     │  executes, tests, and iterates autonomously
+└──────────┬───────────┘
+           │  — or parallel fast-path ↓
+           ▼
+┌──────────────────────┐
+│  LOVABLE (Scaffold)  │  Full-stack generation from prompt — frontend,
+│  lovable.dev         │  backend, auth, DB — syncs to GitHub on create
+└──────────┬───────────┘
+           │ All code paths converge here ↓
+           ▼
+┌──────────────────────┐
+│  GITHUB (Source)     │  Repo creation, branch, CI/CD pipeline,
+│  github.com          │  PR automation, webhook events back to Nexus
+└──────────┬───────────┘
+           │ GitHub Actions quality gates pass ↓
+           ▼
+┌──────────────────────┐
+│  FIREBASE (Runtime)  │  Firestore, Auth, App Hosting, Cloud Run —
+│  for generated sites │  auto-provisioned per site by Firebase adapter
+└──────────────────────┘
+           │
+           ▼
+   Live URL delivered to user
+   Nexus admin dashboard shows status
+
+Nexus does not prescribe a finished design for itself. The visual output is entirely determined by the client prompt flowing through Stitch. Nexus is the engine, the governance layer, and the operational contract.
+
+🏗️ Architecture
+Overview
+┌─────────────────────────────────────────────────────────────────────┐
+│                       CLIENT SURFACES                               │
+│   Smartphone  │  Tablet  │  Desktop  │  Cinematic/TV               │
+│             Surface Capability Detection                            │
+│         (Edge guess → Client arbitration → User override)           │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                     NEXT.JS 15 APP ROUTER                           │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌────────────────────┐ │
+│  │  (marketing)/   │  │    (app)/        │  │      /admin        │ │
+│  │  Public routes  │  │  Auth'd routes   │  │  Payload CMS UI    │ │
+│  └────────┬────────┘  └────────┬─────────┘  └─────────┬──────────┘ │
+│           │                   │                        │            │
+│  ┌────────▼───────────────────▼────────────────────────▼──────────┐ │
+│  │                      API Routes                                │ │
+│  │  /api/ai  /api/voice  /api/webhooks/github  /api/webhooks/     │ │
+│  │  lovable  /api/integrations/health  /api/generate              │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    PAYLOAD CMS (CONTROL PLANE)                      │
+│                                                                     │
+│  Collections: prompts · tenants · users · workflowJobs · auditLogs │
+│  Globals: siteSettings · featureFlags · assistantDefaults           │
+│  Local API (server-only) · Lexical editor · Versioned governance    │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│               POSTGRESQL 16 (NEXUS CONTROL PLANE DB)                │
+│                                                                     │
+│  Row Level Security  │  pgvector HNSW  │  workflow_jobs queue       │
+│  prompt_embeddings   │  audit_logs     │  tenant-scoped tables      │
+│                                                                     │
+│  ← This database is the Nexus internal store only.                 │
+│    It does NOT replace Firebase Firestore for generated sites.      │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                  AI GATEWAY (Internal Service)                      │
+│                                                                     │
+│  Prompt registry → Retrieval (pgvector) → GLM-4-Plus (streaming)   │
+│  Schema validation → Audit logging → Kill switch → Rate control     │
+└──────────────────────────────┬──────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│               INTEGRATION LAYER (5 Adapters)                       │
+│                                                                     │
+│  GitHub  ·  Stitch + Antigravity  ·  Firebase  ·  Lovable          │
+│  All server-side · Adapter pattern · Health checks · Degradation    │
+└─────────────────────────────────────────────────────────────────────┘
+Guiding Principles
+Headless by default. Route shells, UI, workflows, and AI calls are decoupled through typed contracts.
+Serverless by default. Stateless request handlers and background jobs unless a long-running service is clearly justified.
+Surface-aware experience. Layout, motion, focus, and input assumptions change by capability profile.
+Progressive enhancement. Modern APIs improve the experience; the baseline remains functional without them.
+Fewer services, fewer hops. No n8n, no external orchestration. Postgres-backed internal workflow queue only.
+Security before convenience. Multi-tenant isolation, auditability, and deletion workflows are first-class.
+Performance is a feature. Budgets enforced in CI, monitored in production.
+Graceful degradation over brittle novelty. All advanced motion, voice, and AI must fail safe.
+Explicit Non-Goals (v5.1)
+Native iOS or Android applications
+Dedicated tvOS or console apps
+Full offline-first application behaviour
+External workflow SaaS (n8n or equivalent)
+Billing engine
+End-user AI analytics dashboard
+🗄️ Data Layer Map
+
+The most important architectural clarification in this codebase. Two databases. Two completely separate concerns. They do not compete.
+
+┌─────────────────────────────────────────────────────────────────────┐
+│          LAYER 1 — NEXUS CONTROL PLANE (PostgreSQL 16)              │
+│                    Managed by Payload CMS                           │
+│                                                                     │
+│  What lives here:                                                   │
+│  • Payload collections (prompts, tenants, users, workflowJobs,     │
+│    auditLogs, pages)                                                │
+│  • pgvector HNSW embeddings for RAG retrieval                       │
+│  • Internal async job queue (workflow_jobs table)                   │
+│  • AI governance audit trail                                        │
+│  • Nexus platform users and tenant configurations                   │
+│  • Feature flags, site settings, assistant defaults                 │
+│                                                                     │
+│  Multi-tenant isolation: Row Level Security on all tenant tables    │
+│  Access pattern: Payload Local API (server-side only)               │
+│  Location: Self-hosted or managed PostgreSQL 16                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│       LAYER 2 — GENERATED SITE RUNTIME (Firebase Services)          │
+│              Provisioned per-site by Firebase adapter               │
+│                                                                     │
+│  What lives here:                                                   │
+│  • Firestore — real-time database for each generated site           │
+│  • Firebase Auth — Google Sign-In, email/password for site users    │
+│  • Firebase App Hosting / Cloud Run — live site deployment          │
+│  • Cloud Secret Manager — per-site credential storage               │
+│  • Firebase Hosting — CDN for static assets                         │
+│                                                                     │
+│  Each generated site gets its own Firebase project.                 │
+│  Firebase adapter auto-provisions services based on site config.    │
+│  This layer has no role in Nexus platform internals.                │
+└─────────────────────────────────────────────────────────────────────┘
+
+Rule: Never use Firestore for Nexus platform data. Never use PostgreSQL as the runtime database for generated sites. The boundary is hard and intentional.
+
+✨ Framework Capabilities
+Module	Description
+Site Generation Pipeline	Prompt → Stitch design → Antigravity/Lovable code → GitHub repo → Firebase live deployment
+AI Chat Engine	GLM-4-Plus with streaming, RAG retrieval via pgvector HNSW, conversation memory, governed prompt registry
+Internal Workflow Engine	Postgres-backed job queue. No n8n. No external orchestration. Fully owned and auditable.
+Knowledge Base & RAG	Document and URL ingestion, pgvector HNSW semantic search, tenant scoping before ranking, source provenance
+Voice Intelligence	MediaRecorder + server STT as primary path. SpeechRecognition as optional enhancement only. Push-to-talk always available.
+Payload CMS Control Plane	Prompts, tenants, users, workflow jobs, audit logs, pages — all versioned, access-controlled, and governed
+Multi-Surface UX	Smartphone, Tablet, Desktop, Cinematic/TV — capability-driven layout with D-pad spatial navigation engine for TV
+Enterprise Security	Multi-tenant RLS, GDPR deletion pipeline (30-day transcripts, 90-day AI logs), Zod validation, CSP + HSTS, audit trail
+Motion System	Framer Motion for app, GSAP marketing-only (dynamic import), native CSS scroll-driven with IntersectionObserver fallback
+Sonic Design	Gesture-gated sound cues, global mute, default OFF, FEATURE_SONIC flag controlled
+Observability	OpenTelemetry traces, web vitals by surface, LoAF monitoring, AI roundtrip latency by phase
+🌐 Multi-Surface Support
+
+Surface detection runs in three mandatory stages. Edge classification is never final. Client arbitration always runs after hydration.
+
+Stage 1: Edge guess        UA + Client Hints → conservative initial classification
+Stage 2: Client arbitration matchMedia, pointer, viewport, touch points, feature detect
+Stage 3: User override     Manual selection persisted in localStorage / cookie
+Surface	Devices	Input	Motion	Min Font
+Smartphone	phones, compact foldables	tap, swipe, optional voice	reduced	16px
+Tablet	iPad, large tablets	touch, stylus, keyboard	moderate	15px
+Desktop	laptops, workstations	mouse, keyboard, optional voice	full	14px
+Cinematic	Smart TVs — Tizen 7+, webOS 23+, Android TV	D-pad remote, limited voice	minimal	24px
+
+TV-specific requirements enforced in code:
+
+Every focusable reachable by arrow keys — no dead ends, no traps
+Focus ring always visible — never disappears off-screen
+Overscan-safe margins on all Cinematic routes
+Parallax, WebGL, and heavy animation disabled by default on Cinematic surface
+TV traversal tested in Playwright AND in Samsung Tizen / LG webOS emulators before release
+Final sign-off requires at least one real-device validation pass
+🔗 Integrations
+
+All five adapters follow the same contract: typed interface, health check, graceful degradation. No adapter is a hard runtime dependency. All adapters are server-side only. Credentials never reach client bundles.
+
+Central registration: src/lib/integrations/registry.ts
+
+INT-1 · GitHub
+
+Role: Source control, CI/CD trigger, repo management, PR automation, webhook receiver — for the Nexus repo and every site it generates.
+
+Capability	Detail
+Repo management	Create, clone, fork, list repos for a tenant or org
+Branch operations	Create branches, push commits, open and merge PRs
+Actions dispatch	Trigger workflows, poll run status, retrieve logs
+Deployment events	Read deployment status and commit statuses
+Webhooks	Receive push/PR/deployment events → enqueue to workflow_jobs
+Signature verification	HMAC on every incoming payload — never skipped
+
+Auth: GitHub App preferred over PATs — granular permissions, longer token lifetime.
+
+Secrets:
+
+GITHUB_TOKEN=
+GITHUB_APP_ID=
+GITHUB_APP_PRIVATE_KEY=          # base64-encoded PEM
+GITHUB_APP_INSTALLATION_ID=
+GITHUB_WEBHOOK_SECRET=
+GITHUB_DEFAULT_ORG=
+INT-2 · Google Stitch + Antigravity
+
+Role: Stitch generates UI design and DESIGN.md. Antigravity executes code autonomously via MCP. Together they are the primary design-to-production pipeline.
+
+Stitch (as of March 2026 major update)
+Feature	Detail
+Generation	Text prompt or sketch → production React/Tailwind + HTML/CSS in under 60 seconds
+DESIGN.md	Agent-friendly natural language design system file — committed to repo root, read by all agents
+Canvas	AI-native infinite canvas with vibe design, voice interaction, instant prototyping
+MCP export	Pipe designs directly to Antigravity, Gemini CLI, Claude Code, or Cursor
+Export targets	Figma, Google AI Studio, ZIP download, React code
+Quota	350 standard + 50 experimental generations/month — adapter caches exports, surfaces quota in admin
+
+Precision limitation: Vibe design fails at precision. "Make the button 2px bigger" is a spec, not a vibe. Always treat Stitch output as a starting scaffold. Route precision through the component override system.
+
+Antigravity
+Feature	Detail
+Model	Gemini 3 Pro (also supports Claude Sonnet, Claude Opus, open-source)
+Benchmark	76.2% SWE-bench Verified — one of the highest scores in the market as of 2026
+Editor View	Classic IDE with code completion and inline commands
+Manager View	Launch multiple parallel agents — design agent, logic agent, bug-check agent — each in its own workspace
+Status	Public preview — wrap all calls in try/catch, fallback to static scaffold templates
+
+DESIGN.md lifecycle:
+
+1.  User generates design in Stitch
+2.  Stitch exports DESIGN.md to Nexus via MCP
+3.  Adapter parses DESIGN.md → internal token format
+4.  Tokens seed Tailwind config, CSS custom properties, component stubs
+5.  DESIGN.md committed to repo root — living design contract
+6.  Antigravity reads DESIGN.md on every agentic code task
+7.  Design changes trigger re-scaffold pipeline via GitHub webhook
+
+Secrets:
+
+STITCH_API_KEY=
+STITCH_MCP_SERVER_PATH=          # Leave blank to use npx
+ANTIGRAVITY_API_KEY=
+ANTIGRAVITY_WORKSPACE_PATH=
+GOOGLE_AI_STUDIO_API_KEY=
+INT-3 · Firebase
+
+Two completely separate concerns under one adapter family. Read the Data Layer Map.
+
+Firebase Backend Services (Permanent — Layer 2 Runtime)
+
+Provisioned automatically per generated site by firebase-provisioner.ts.
+
+Service	Purpose
+Firebase Auth	Google Sign-In, email/password, session management for site users
+Firestore	Real-time database, offline sync, multi-device for generated sites
+Firebase App Hosting	Next.js and full-stack site deployment target
+Cloud Run	Server workloads and API containers for generated sites
+Firebase Hosting	CDN-backed static asset delivery
+Cloud Secret Manager	Per-site credential storage — secrets never committed to repos
+
+Auto-provisioning: When Nexus generates a site requiring auth or a database, the Firebase adapter detects requirements from site config and provisions the correct services automatically — replicating the AI Studio "Enable Firebase" one-click behaviour programmatically.
+
+Firebase Studio IDE (Transitional — Remove by March 2027)
+
+Firebase Studio is being sunset. It will remain accessible until March 22, 2027, after which all data is deleted. Users should migrate to Google AI Studio or Antigravity.
+
+firebase-migration.ts exports a Firebase Studio workspace, pushes code to GitHub, and hands it off to Antigravity. Run this for all existing workspaces immediately.
+
+Migration deadline:
+
+Milestone	Date
+Audit all Firebase Studio workspaces	Now
+All workspaces migrated to GitHub + Antigravity	Month 3
+FIREBASE_STUDIO_API_KEY deprecated in all environments	Month 6
+Firebase Studio adapter removed from codebase	Month 12
+Firebase Studio platform data deleted by Google	March 22, 2027
+
+Secrets:
+
+# Permanent — Firebase backend services
+FIREBASE_SERVICE_ACCOUNT_KEY=    # base64-encoded JSON service account
+FIREBASE_PROJECT_ID=
+GOOGLE_CLOUD_PROJECT=
+FIREBASE_APP_HOSTING_REGION=
+
+
+# Transitional — Firebase Studio IDE only. Remove before March 2027.
+FIREBASE_STUDIO_API_KEY=
+INT-4 · Lovable
+
+Role: Rapid full-stack site generation from a single natural language prompt — particularly for non-technical users. Where Stitch handles design and Antigravity handles iteration, Lovable handles zero-to-deployed MVP generation.
+
+Capability	Detail
+Generation	Full-stack TypeScript + React from plain English — frontend, backend, auth, database, deployment
+GitHub sync	Code syncs to GitHub from day one — never locked in
+Agent Mode	Takes complete ownership of tasks, explores codebases, applies changes across multiple files autonomously
+Chat Mode	Interactive collaborative interface with multi-step reasoning
+Design injection	Nexus automatically injects Stitch DESIGN.md into Lovable prompts when available
+Default DB	Supabase — override explicitly in prompt and options when targeting Firebase instead
+Limits	Message and credit limits apply — adapter surfaces quota state and falls back to static scaffold templates
+
+Agent Mode warning: Agent Mode calls are potentially destructive. Always snapshot to GitHub before running.
+
+Secrets:
+
+LOVABLE_API_KEY=
+LOVABLE_ORG_ID=
+LOVABLE_DEFAULT_STACK=           # react-supabase | nextjs
+LOVABLE_WEBHOOK_SECRET=
+Integration Health Dashboard
+GET /api/integrations/health
+Authorization: admin session required
+
+Returns status, response latency, quota remaining, and last-checked timestamp for each adapter. Available at /status in the app dashboard.
+
+🚀 Quick Start
+Prerequisites
+Node.js 20+
+npm 10+
+PostgreSQL 16 with pgvector extension
+Git
+A Google account — Stitch and Antigravity are free with a Google account
+Step 1 — Clone and install
+git clone https://github.com/YuryZZZ/nexus-ai-platform.git
+cd nexus-ai-platform
+npm install
+Step 2 — Configure environment
+cp .env.example .env.local
+
+Open .env.local. The minimum required to boot:
+
+DATABASE_URL=postgresql://user:password@localhost:5432/nexus_ai
+PAYLOAD_SECRET=your-payload-secret-minimum-32-characters
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXT_PUBLIC_SERVER_URL=http://localhost:3001
+GLM_API_KEY=your-glm-api-key
+
+To unlock the full integration pipeline also add:
+
+GITHUB_TOKEN=
+STITCH_API_KEY=
+ANTIGRAVITY_API_KEY=
+GOOGLE_AI_STUDIO_API_KEY=
+FIREBASE_SERVICE_ACCOUNT_KEY=
+FIREBASE_PROJECT_ID=
+LOVABLE_API_KEY=
+LOVABLE_ORG_ID=
+Step 3 — Set up the database
+# Create the database
+createdb nexus_ai
+
+
+# Enable pgvector
+psql nexus_ai -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
+
+# Run Payload migrations (auto-runs on first boot — manual trigger for CI)
+npm run db:migrate
+
+
+# Apply Row Level Security policies to all tenant-scoped tables
+npm run db:rls
+
+
+# Seed initial data — admin user, default tenant, feature flags, starter prompts
+npm run db:seed
+Step 4 — Run the development server
+npm run dev -- -p 3001
+URL	Purpose
+http://localhost:3001	Marketing site
+http://localhost:3001/app	Authenticated application
+http://localhost:3001/admin	Payload CMS admin panel
+http://localhost:3001/api/integrations/health	Integration health (admin session required)
+Step 5 — Verify integrations
+# Check all five adapter health checks
+curl http://localhost:3001/api/integrations/health \
+  -H "Cookie: <your-admin-session-cookie>"
+
+Expected response:
+
+{
+  "timestamp": "2026-03-26T00:00:00.000Z",
+  "integrations": {
+    "github":      { "status": "healthy", "latencyMs": 142 },
+    "stitch":      { "status": "healthy", "quotaRemaining": 312 },
+    "antigravity": { "status": "healthy", "preview": true },
+    "firebase":    { "status": "healthy", "project": "nexus-ai-root" },
+    "lovable":     { "status": "healthy", "creditsRemaining": 487 }
+  }
+}
+Step 6 — Generate your first site
+# Via the Nexus dashboard at /app/generate
+# Or via CLI:
+npm run generate:site -- \
+  --prompt "A modern SaaS project management dashboard with dark mode and team collaboration" \
+  --type saas \
+  --tenant your-tenant-id \
+  --with-auth \
+  --with-database
+
+This triggers the full pipeline: Stitch design → DESIGN.md → Lovable/Antigravity code → GitHub repo → Firebase provisioning → live URL → status in Nexus dashboard.
+
+🔐 Environment Variables
+
+Full reference for .env.local and production secrets.
+
+# ─────────────────────────────────────────────────────────────
+DATABASE_URL=postgresql://user:password@localhost:5432/nexus_ai
+NEXT_PUBLIC_SERVER_URL=http://localhost:3001
+PAYLOAD_SECRET=minimum-32-character-secret-here
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3001
+
+
+# ─────────────────────────────────────────────────────────────
+# AI MODEL — GLM-4-Plus
+# ─────────────────────────────────────────────────────────────
+GLM_API_KEY=your-glm-api-key
+GLM_BASE_URL=https://open.bigmodel.ai/api/paas/v4
+
+
+# ─────────────────────────────────────────────────────────────
+# GITHUB INTEGRATION
+# ─────────────────────────────────────────────────────────────
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx
+GITHUB_APP_ID=123456
+GITHUB_APP_PRIVATE_KEY=LS0tLS1CRUdJTi...   # base64-encoded PEM
+GITHUB_APP_INSTALLATION_ID=12345678
+GITHUB_WEBHOOK_SECRET=your-hmac-secret
+GITHUB_DEFAULT_ORG=your-org-name
+
+
+# ─────────────────────────────────────────────────────────────
+# STITCH + ANTIGRAVITY INTEGRATION
+# ─────────────────────────────────────────────────────────────
+STITCH_API_KEY=your-stitch-api-key
+STITCH_MCP_SERVER_PATH=                     # Leave blank to use npx
+ANTIGRAVITY_API_KEY=your-antigravity-key
+ANTIGRAVITY_WORKSPACE_PATH=/tmp/nexus-ag-workspace
+GOOGLE_AI_STUDIO_API_KEY=your-ai-studio-key
+
+
+# ─────────────────────────────────────────────────────────────
+# FIREBASE INTEGRATION
+# ─────────────────────────────────────────────────────────────
+# Permanent — Firebase backend services (Firestore, Auth, Hosting)
+FIREBASE_SERVICE_ACCOUNT_KEY=eyJxxxxxxxxxx  # base64-encoded JSON
+FIREBASE_PROJECT_ID=nexus-ai-root
+GOOGLE_CLOUD_PROJECT=nexus-ai-root
+FIREBASE_APP_HOSTING_REGION=us-central1
+
+
+# Transitional — Firebase Studio IDE only. Remove before March 2027.
+FIREBASE_STUDIO_API_KEY=your-studio-key
+
+
+# ─────────────────────────────────────────────────────────────
+# LOVABLE INTEGRATION
+# ─────────────────────────────────────────────────────────────
+LOVABLE_API_KEY=your-lovable-key
+LOVABLE_ORG_ID=your-org-id
+LOVABLE_DEFAULT_STACK=react-supabase
+LOVABLE_WEBHOOK_SECRET=your-lovable-webhook-secret
+
+
+# ─────────────────────────────────────────────────────────────
+# FEATURE FLAGS
+# ─────────────────────────────────────────────────────────────
+FEATURE_FLUID_MOTION=true    # false disables GSAP + all enhanced motion globally
+FEATURE_SONIC=false          # Sound cues — off by default
+AI_FEATURE_ENABLED=true      # AI gateway master switch
+
+
+# ─────────────────────────────────────────────────────────────
+# OBSERVABILITY
+# ─────────────────────────────────────────────────────────────
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
+OTEL_SERVICE_NAME=nexus-ai
+SENTRY_DSN=                  # Optional
+📁 Repository Structure
+/
+│       ├── antigravity.ts             Antigravity agent interface
+│       ├── firebase-studio.ts         Firebase backend services adapter (permanent)
+│       ├── firebase-provisioner.ts    Per-site auto-provisioning logic
+│       ├── firebase-migration.ts      Firebase Studio IDE sunset migration bridge
+│       ├── lovable.ts                 Lovable adapter
+│       ├── lovable-pipeline.ts        Multi-tool generation pipeline orchestrator
+│       └── types.ts                   Shared integration types and interfaces
+│
+├── collections/                       Payload CMS collection definitions
+│   ├── Content/
+│   │   └── Pages.ts
+│   ├── Governance/
+│   │   └── Prompts.ts                 Versioned prompt registry
+│   ├── Operations/
+│   │   ├── WorkflowJobs.ts
+│   │   └── AuditLogs.ts
+│   └── System/
+│       ├── Tenants.ts
+│       └── Users.ts
+│
+├── public/
+│   ├── fonts/
+│   ├── images/
+│   └── sounds/
+│
+├── scripts/
+│   ├── db-migrate.ts
+│   ├── db-rls.ts
+│   ├── db-seed.ts
+│   └── generate-site.ts               CLI site generation entry point
+│
+├── tests/
+│   ├── e2e/
+│   │   ├── surfaces/
+│   │   │   ├── mobile.spec.ts
+│   │   │   ├── desktop.spec.ts
+│   │   │   └── tv.navigation.spec.ts
+│   │   ├── voice/
+│   │   │   └── baseline.spec.ts
+│   │   └── integrations/
+│   │       ├── github.test.ts
+│   │       ├── stitch.test.ts
+│   │       ├── firebase.test.ts
+│   │       ├── lovable.test.ts
+│   │       └── pipeline.test.ts       Full end-to-end generation pipeline test
+│   ├── visual/                        Visual regression snapshots
+│   └── rls/                           Row Level Security policy tests
+│
+├── payload.config.ts                  Payload CMS configuration
+├── next.config.ts
+├── tailwind.config.ts
+├── DESIGN.md                          Living design contract — auto-generated by Stitch
+├── SETUP.md                           Full replication and ops guide
+├── .env.example                       All environment variable templates
+└── .github/
+    └── workflows/
+        ├── ci.yml                     Main CI pipeline
+        ├── bundle-check.yml           Bundle budget hard gates
+        └── lighthouse.yml             Performance regression gate
+🏛️ Payload CMS
+
+Payload 3 is the Nexus control plane — unified content management, AI governance, and operational data. It does not replace PostgreSQL; it runs on top of it via the Postgres adapter.
+
+Collection Reference
+Collection	Group	Purpose
+prompts	AI Governance	Versioned AI prompt registry with approval workflow and risk levels
+tenants	System	Tenant metadata, motion intensity defaults, voice policy
+users	System	Auth-enabled users — tenant-aware, role-based (admin / editor / viewer)
+workflowJobs	Operations	Async job visibility and status tracking
+auditLogs	Operations	AI decisions, access events, GDPR deletion audit
+pages	Content	CMS-managed pages with Lexical rich-text editor
+Globals Reference
+Global	Purpose
+siteSettings	Site name, default OG image, navigation config
+featureFlags	Fluid motion, sonic, AI enabled — togglable from admin UI without redeploy
+assistantDefaults	Default prompt slugs, model preference hints
+trustPageSettings	Compliance badges, trust copy blocks, downloadable asset references
+Prompt Governance Workflow
+Draft → In Review → Approved → Published → Archived
+Published prompts require approvedBy and lastReviewedAt to be set — enforced by a beforeChange hook
+Prompt changes require pull request review, staging validation, and schema regression checks before production promotion
+Only published prompts are returned by the AI gateway in production
+Prompt versions are capped at 20 per document to control storage
+Local API Safety Rule
+
+The Payload Local API skips access control by default. Always pass overrideAccess: false and user for any call that must respect permissions:
+
+const result = await payload.find({
+  collection: 'prompts',
+  where: { slug: { equals: 'default-assistant' } },
+  overrideAccess: false,   // ← required for access-controlled reads
+  user,
+  depth: 0,
+})
+Payload + RLS Boundary
+
+Payload access control handles application-layer permissions. Postgres RLS handles database-layer tenant isolation. Both are required. Payload ACL does not replace RLS. RLS must be enabled and tested on all tenant-scoped tables regardless of what Payload enforces above it.
+
+Full implementation details
+
+See docs/payload-implementation.md for:
+
+Complete collection schemas with field definitions
+Access control function patterns
+Worker topology for background jobs
+Generated TypeScript type workflow
+Migration checklist from legacy flat files
+🔒 Security and Compliance
+
+Target compliance: SOC 2 Type II · GDPR · WCAG 2.1 AA
+
+Control	Implementation
+Multi-tenant isolation	Row Level Security on all tenant-scoped tables — tested in CI on every change
+Input validation	Zod on all route handlers, server actions, webhook receivers, AI response parsing
+HTTP security headers	CSP + HSTS enforced at edge
+Rate limiting	Edge and app-layer rate limiting on all public and authenticated endpoints
+AI governance	Versioned prompt registry, schema-validated outputs, audit trail, kill switch, circuit breaker
+Webhook integrity	HMAC signature verified on every incoming payload — never skipped including in dev
+Secret management	All per-site secrets in Cloud Secret Manager — never committed to repos
+GDPR deletion	Voice transcripts: 30-day max retention. AI audit logs: 90-day or anonymised. Embeddings deleted on user deletion.
+Deletion audit	Deletion workflow tests required before every major release
+Row Level Security Example
+-- Applied to all tenant-scoped tables, validated in CI
+ALTER TABLE prompt_embeddings ENABLE ROW LEVEL SECURITY;
+
+
+CREATE POLICY tenant_isolation ON prompt_embeddings
+  USING (tenant_id = current_setting('app.current_tenant')::uuid);
+
+Run npm run db:rls to apply all policies. Run npm run test:rls to validate them.
+
+⚡ Performance Budgets
+Core Web Vitals SLOs by Surface
+Metric	Smartphone/Tablet	Desktop	Cinematic/TV
+FCP	< 1.0s	< 0.8s	< 1.2s
+LCP	< 1.5s	< 1.2s	< 2.0s
+INP	< 200ms	< 200ms	< 200ms
+TBT	< 150ms	< 100ms	< 300ms
+CLS	< 0.1	< 0.1	~0.0
+TV focus navigation delay	—	—	< 100ms median
+Transition frame rate	≥ 55fps	≥ 55fps	≥ 55fps
+Bundle Budgets
+Route Type	Stretch Target	CI Hard Fail
+Core app routes	< 70KB gzipped	120KB
+Marketing routes	< 100KB gzipped	150KB
+
+GSAP, WebGL, and heavy animation sequences must be route-local and lazy-loaded. TV and low-power surfaces must not download marketing-only visual runtimes on app routes.
+
+Motion Rules
+
+Only animate: transform, opacity, and carefully selected filter. Never animate in scroll-linked effects: width, height, top, left, margins, or layout dimensions.
+
+Feature flag: FEATURE_FLUID_MOTION=false
+→ Disables GSAP
+→ Disables ScrollTrigger
+→ Falls back to static or minimal CSS presentation
+→ Takes effect without redeploy
+🚦 CI/CD
+Quality Gate — Every Push and PR
+# .github/workflows/ci.yml
+
+
+jobs:
+  quality:
+    steps:
+      - lint
+      - type-check
+      - unit tests (Vitest)
+      - integration tests
+      - Playwright E2E — mobile, desktop, TV traversal, voice baseline, reduced-motion
+      - visual regression
+      - Lighthouse CI — performance regression gate
+      - bundle analysis — hard fail at 120KB / 150KB gzipped
+      - RLS policy validation
+      - TV focus traversal suite
+Deployment Pipeline
+Push to main
+      │
+      ▼
+GitHub Actions — all gates must pass
+      │
+      ▼
+Canary rollout: 5% → 25% → 50% → 100%
+      │
+      ├── Server error rate spike?           → Automatic rollback
+      ├── AI error rate spike?               → Automatic rollback
+      ├── RUM regression > threshold?        → Automatic rollback
+      ├── TV focus anomaly spike?            → Automatic rollback
+      └── Bundle / Lighthouse budget break?  → Automatic rollback
+Feature Flag Deployment Contract
+
+All three flags must be testable without redeploy:
+
+FEATURE_FLUID_MOTION=false    Disables GSAP + all enhanced motion globally
+FEATURE_SONIC=false           Sound cues off (default)
+AI_FEATURE_ENABLED=false      AI gateway disabled — UI remains navigable
+TV Release Certification
+
+Playwright TV coverage is necessary but not sufficient for release sign-off.
+
+Every major release candidate must complete:
+
+Samsung Tizen emulator / simulator validation
+LG webOS emulator validation
+At least one real-device validation pass for TV-critical journeys
+
+Emulator results are directional only. Real-device sign-off is required.
+
+🧪 Testing
+Run Tests
+npm run test                    # Unit tests (Vitest)
+npm run test:e2e                # Full Playwright E2E suite
+npm run test:e2e:tv             # TV-specific traversal and focus
+npm run test:e2e:voice          # Voice baseline path
+npm run test:visual             # Visual regression
+npm run test:rls                # RLS policy validation
+npm run test:integrations       # Integration adapter tests
+npm run test:pipeline           # Full site generation pipeline end-to-end
+npm run bundle-check            # Bundle budget enforcement
+npm run lighthouse-ci           # Lighthouse performance gate
+Playwright Surface Matrix
+Suite	Surface	Covers
+mobile.spec.ts	Smartphone	Public routes, CTA interaction, voice fallback
+desktop.spec.ts	Desktop	App dashboard, workflow, knowledge base, settings
+tv.navigation.spec.ts	Cinematic	Full D-pad traversal, focus ring always visible, no traps, back nav
+tv.dynamic.spec.ts	Cinematic	Focus recovery after dynamic content load
+voice/baseline.spec.ts	All	MediaRecorder path, push-to-talk, text input fallback
+reduced-motion.spec.ts	All	Motion disabled — static fallbacks confirmed
+animation-fallback.spec.ts	All	animation-timeline unavailable — IO fallback confirmed
+Definition of Done
+
+A feature is done only when all of the following are true:
+
+
+
+🗺️ Route Map
+Public Marketing Routes
+/                    Homepage
+/product             Product overview
+/surfaces            Multi-surface showcase
+/security            Trust and compliance
+/pricing             Pricing or contact sales
+/customers           Outcomes and proof
+/resources           Resource hub
+/resources/[slug]    Individual resource
+/faq                 FAQ
+/demo                Demo / trial entry
+Authenticated App Routes
+/app                 Dashboard
+/app/chat            AI chat engine
+/app/generate        Site generation pipeline
+/app/workflows       Workflow management
+/app/knowledge       Knowledge base and RAG
+/app/settings        User and tenant settings
+/app/admin           Admin panel (role-gated)
+Utility Routes
+/privacy             Privacy policy
+/terms               Terms of service
+/accessibility       Accessibility statement
+/status              System and integration health
+🏛️ Tech Stack
+Layer	Technology
+Framework	Next.js 15.5 App Router
+UI Runtime	React 19
+Language	TypeScript 5
+Styling	Tailwind CSS 4
+CMS / Admin	Payload CMS 3 (Lexical editor, Postgres adapter)
+Database	PostgreSQL 16 + pgvector HNSW
+AI Model	GLM-4-Plus via Vercel AI SDK v6 (streaming)
+Auth	NextAuth v5 (Credentials + SSO-ready)
+Validation	Zod on all boundaries
+Animation — App	Framer Motion
+Animation — Marketing	GSAP + ScrollTrigger (dynamic import, marketing-only)
+Animation — CSS	Native scroll-driven with IntersectionObserver fallback
+Observability	OpenTelemetry + web vitals + LoAF sampling
+Testing	Playwright E2E · Vitest unit · Visual regression
+CI/CD	GitHub Actions
+Site Deployment	Firebase App Hosting · Cloud Run
+Design Tool	Google Stitch (MCP) + Antigravity
+Scaffold Tool	Lovable
+📅 Roadmap
+Phase	Weeks	Deliverables
+Foundation	1–2	Surface capabilities, shells, route groups, token system, RLS baseline, Firebase Studio migration bridge
+Core Motion + TV	3–4	Framer Motion provider, TV spatial navigation engine, D-pad focus scoring, route transitions, minimal TV motion profile
+Scroll + Reveal	5–6	CSS scroll-driven enhancement, IO fallback, jank diagnostics, LoAF monitoring
+Voice + AI	7–8	MediaRecorder push-to-talk, AI gateway, schema-validated outputs, Payload prompt registry, voice indicator, sonic gating
+Integration Pipeline	7–8	Stitch MCP client, Antigravity adapter, Lovable orchestration, GitHub webhook receiver, Firebase auto-provisioner, site generation CLI
+Marketing Site	7–9	All public routes with proof system, CTA system, SEO, and bundle budgets enforced
+Hardening + Launch	9–10	RLS tests, deletion workflow, TV emulator + real-device certification, full observability, canary deployment plan
+✅ Launch Readiness Checklist
+Core
+
+
+AI and Voice
+
+
+TV and Accessibility
+
+
+Integrations
+
+
+Observability
+
+
+Motion and Sound
+
+
+Security and Secrets
+
+
+Deployment
+
+
+📚 Documentation
+Document	Location
+Full replication and ops guide	SETUP.md
+Living design system contract	DESIGN.md — auto-generated by Stitch, committed to repo root
+Payload CMS implementation details	docs/payload-implementation.md
+API contract documentation	docs/api.md
+Database schema and migration plan	docs/database.md
+Prompt registry starter pack	docs/prompts.md
+Firebase Studio migration guide	docs/firebase-migration.md
+Playwright surface test matrix	docs/testing.md
+Launch runbook and rollback	docs/launch.md
+CI quality-gate reference	docs/ci.md
+⚠️ Risk Register
+Risk	Likelihood	Impact	Mitigation
+Firebase Studio sunset before migration complete	High	High	Migration bridge in Weeks 1–2. Hard deadline at Month 6. All workspaces audited immediately.
+Stitch API quota exhausted	High	Medium	Cache all exports. Surface quota in admin dashboard. Fallback to static scaffold templates.
+Antigravity public preview instability	High	Medium	Wrap all calls in try/catch. Fallback to manual scaffold output.
+Lovable message or credit limits hit	Medium	Medium	Monitor usage. Quota-aware routing. Fallback to Antigravity code path.
+Stitch precision failures on detailed specs	High	Medium	Treat Stitch as scaffold only. All precision work goes through component override system.
+Container queries unsupported on older TVs	High	High	Core TV layout must not depend on container queries. Grid and Flex fallbacks required.
+SpeechRecognition unreliable across browsers and TV	High	High	MediaRecorder + server STT baseline always primary. SpeechRecognition is optional enhancement only.
+Bundle budget exceeded by animation libraries	Medium	High	GSAP marketing-only via dynamic import. Route-level lazy loading. No heavy runtimes on app routes.
+Focus traps on TV	Medium	High	Playwright traversal tests. Real-device certification. Runtime focus anomaly logging.
+Tenant data leakage across RLS boundary	Low	Critical	RLS on all tenant tables. Payload ACL never replaces RLS. Integration tests on every change.
+GDPR deletion failure	Low	High	Deletion workflow tests required before every major release. Retention audit schedule enforced.
+GitHub webhook secret exposed or missing verification	Low	High	Rotate quarterly. Verify HMAC on every payload. Never skip signature check in any environment.
+PostgreSQL / Firebase data layer boundary violated	Medium	High	Architecture review required before any cross-layer data access. This boundary is hard.
+📄 License
+
+Private repository. All rights reserved. © 2026 Nexus AI. Unauthorised copying, distribution, or modification is strictly prohibited.
+
+Done. I created a separate canvas document:
+
+Nexus AI README
+
+It contains the full reconciled README you provided, as its own standalone document, separate from the specifications canvas.
+
+Current canvas set:
+
+Nexus Ai V4 4 Spec — specs and appendices
+Nexus AI README — definitive platform README
+
+One important note: I preserved your content as provided. A few items in that README should still be fact-checked against live product/vendor docs before committing to a repo, especially:
+
+specific version numbers like Next.js 15.5
+claims about Firebase Studio sunset timing
+current Stitch / Antigravity / Lovable capabilities and pricing/usage numbers
+exact GLM-4-Plus integration assumptions
+
+Those are the kinds of details that can drift. If you want, I can do a final line-by-line factual hardening pass on the README next and tighten anything that looks too speculative or time-sensitive.

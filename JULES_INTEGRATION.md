@@ -26,10 +26,12 @@ Jules is Google's **asynchronous, cloud-native coding agent** that executes task
 
 - Repository-wide refactoring across thousands of files
 - Dependency updates across monorepos
-- Security vulnerability patching (parallel)
+- Security vulnerability patching (parallel — up to **60 concurrent tasks**)
 - Large-scale test generation
 - Database schema migrations
 - Code format standardization (e.g., CommonJS → ES Modules)
+- **Proactive maintenance** — scans repos for `#TODO` comments and deployment errors
+- **Critic Agent** — adversarial self-review of its own code proposals before human review
 
 ### Key Characteristics
 
@@ -37,11 +39,13 @@ Jules is Google's **asynchronous, cloud-native coding agent** that executes task
 | ----------------- | ----------------------------------------------- |
 | Execution         | Asynchronous, non-blocking                      |
 | Environment       | Isolated Google Cloud VM per session            |
-| Model             | Gemini 3 Pro (reasoning)                        |
+| Model             | **Gemini 3.1 Pro** (reasoning)                  |
+| Concurrency       | Up to **60 concurrent tasks**                   |
 | Input             | Natural language prompt + GitHub repo           |
 | Output            | Pull Request with code changes                  |
 | Authentication    | API key (`X-Goog-Api-Key`)                      |
-| Monitoring        | CLI polling or REST API activities              |
+| Monitoring        | Web dashboard, CLI polling, or REST API         |
+| Web Dashboard     | https://jules.google.com                        |
 
 ### When to Use Jules vs Antigravity
 
@@ -75,7 +79,7 @@ gemini extensions list
 
 ### Prerequisites
 
-- **Gemini CLI** installed and authenticated (v0.4.0+)
+- **Gemini CLI** installed and authenticated (v0.35.0+)
 - **GitHub repository** with the Jules GitHub App installed
 - **Jules API key** (generated from [jules.google](https://jules.google) → Settings → API Keys)
 
@@ -278,7 +282,7 @@ curl https://jules.googleapis.com/v1alpha/sessions/abc123 \
                          │
                          ▼
                    ┌───────────┐
-                   │ PLANNING  │  ← Gemini 3 Pro analyzes codebase
+                   │ PLANNING  │  ← Gemini 3.1 Pro analyzes codebase
                    └─────┬─────┘
                          │
               ┌──────────┴──────────┐
@@ -310,7 +314,7 @@ curl https://jules.googleapis.com/v1alpha/sessions/abc123 \
 | State                     | What's Happening                                        | Duration      |
 | ------------------------- | ------------------------------------------------------- | ------------- |
 | `QUEUED`                  | Session accepted, waiting for VM allocation              | Seconds       |
-| `PLANNING`               | Gemini 3 Pro reads codebase, formulates strategy         | 1-5 minutes   |
+| `PLANNING`               | Gemini 3.1 Pro reads codebase, formulates strategy       | 1-5 minutes   |
 | `AWAITING_PLAN_APPROVAL` | Plan ready, waiting for human approval (if configured)   | Until approved |
 | `IN_PROGRESS`            | VM executing: editing files, running tests, building     | 5-60 minutes  |
 | `COMPLETED`              | All changes committed, PR created on GitHub              | Terminal      |
