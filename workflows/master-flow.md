@@ -6,6 +6,26 @@ description: The complete "One Interface" master workflow for Antigravity, orche
 
 > This workflow file contains the exact commands and agent prompts to execute the full lifecycle entirely from the Antigravity chat window.
 
+## Step 0: Initialize the Project & Open Antigravity
+
+**When to use:** You are creating a brand new application and need to scaffold our enterprise architecture.
+
+**Terminal Command (run in your standard terminal/Command Prompt):**
+```powershell
+# 1. Clone this master repository
+git clone https://github.com/YuryZZZ/platform-integration.git my-new-project
+
+# 2. Enter the starter kit and initialize the project securely
+cd my-new-project/starter-kit
+./init.ps1
+
+# 3. Open the Antigravity IDE securely
+code .  # Or open the folder directly in your Antigravity app
+```
+*Once Antigravity opens, you will proceed with the rest of the steps exclusively from inside the IDE chat.*
+
+---
+
 ## Step 1: Pull the Visuals (GitHub ← Lovable)
 
 **When to use:** You just finished designing a beautiful new UI layer in Lovable.dev visually, clicked "Connect to GitHub", and need to bring that down to your local machine to add real backend logic.
