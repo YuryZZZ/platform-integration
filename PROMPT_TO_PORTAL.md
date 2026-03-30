@@ -76,6 +76,8 @@ Open Stitch to establish your design identity.
 ```
 *This invokes Stitch MCP tools: `create_project` → `create_design_system` → `generate_screen_from_text`.*
 
+Alternatively, you can start in the web UI at **[stitch.withgoogle.com](https://stitch.withgoogle.com)**, create your project/screens there, and then continue to Step 2.
+
 ### Step 2: Lock the Design Tokens via `DESIGN.md` (2 min)
 ```
 "Antigravity, generate a DESIGN.md from my Stitch project"
@@ -123,7 +125,7 @@ Or run the predefined workflow:
 
 | Feature / Step      | Lovable Flow                                      | Stitch Flow                                    |
 |---------------------|---------------------------------------------------|------------------------------------------------|
-| **Starting Point**  | Visual prototyping environment (`lovable.dev`)      | Conceptual design constraints (`stitch.google`) |
+| **Starting Point**  | Visual prototyping environment (`lovable.dev`)      | Conceptual design constraints (`stitch.withgoogle.com`) |
 | **Code Generation** | Cloud-native via Lovable's engine                 | Local via Antigravity utilizing `DESIGN.md`    |
 | **Version Control** | Two-way GitHub sync (push/pull directly)          | Manual local `git commit / push`               |
 | **Design Control**  | Fluid visual tweaks in-browser                    | Deterministic application of tokens             |
