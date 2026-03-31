@@ -26,6 +26,42 @@ code .  # Or open the folder directly in your Antigravity app
 
 ---
 
+## Step 0.5: Competitor Research & Market Intelligence
+
+**When to use:** Before building anything, you want to study what already works in the market. Feed a competitor's live site into the AI so it can analyze their messaging, SEO structure, design patterns, and trust signals — then use that intelligence to build something better.
+
+**Antigravity Prompt:**
+```text
+"Read the content from https://COMPETITOR-SITE.com/ and analyze it. 
+ Produce a Market Intelligence Report covering:
+ 1. Their messaging hierarchy (headlines, CTAs, value propositions)
+ 2. SEO structure (heading tags, meta descriptions, keyword density)
+ 3. Design patterns (hero layout, social proof placement, color scheme)
+ 4. Trust signals (testimonials, badges, guarantees)
+ 5. Gaps and weaknesses we can exploit
+ Then use this report to inform the DESIGN.md and the initial screen prompts."
+```
+
+> **How it works:** Antigravity has a built-in `read_url_content` tool that scrapes any public URL and converts it to markdown. No external API needed.
+
+---
+
+## Step 0.7: Generate Visual Assets
+
+**When to use:** You need hero images, product mockups, brand illustrations, or scroll-animation frames — without Photoshop or stock photos.
+
+**Antigravity Prompt:**
+```text
+"Generate a hero image for a premium construction management portal. 
+ Dark background, isometric 3D view of a modern building site with 
+ cranes and safety equipment. Professional, corporate aesthetic 
+ matching our DESIGN.md color palette."
+```
+
+> **How it works:** Antigravity has a built-in `generate_image` tool. For scroll-bound animations, generate two states (e.g., "before" and "after"), then use a video generation tool to create a transition video.
+
+---
+
 ## Step 1: Pull the Visuals (GitHub ← Lovable)
 
 **When to use:** You just finished designing a beautiful new UI layer in Lovable.dev visually, clicked "Connect to GitHub", and need to bring that down to your local machine to add real backend logic.
@@ -65,7 +101,26 @@ git fetch origin master && git pull origin master --ff-only
 
 ---
 
-## Step 4: Verify Locally (Playwright / Antigravity)
+## Step 4: QA Audit — Accessibility & SEO
+
+**When to use:** Before deploying, run an automated quality audit that catches accessibility violations, SEO gaps, and UI/UX issues.
+
+**Antigravity Prompt:**
+```text
+"Run a comprehensive QA audit on the entire codebase:
+ 1. ACCESSIBILITY: Scan all components for missing ARIA labels, improper 
+    heading hierarchy (h1→h2→h3), missing alt text on images, and 
+    insufficient color contrast ratios. Fix all issues automatically.
+ 2. SEO: Verify every page has a unique <title>, meta description, 
+    canonical URL, and proper Open Graph tags. Fix any gaps.
+ 3. PERFORMANCE: Check for images without lazy loading, unoptimized 
+    fonts, and render-blocking scripts. Fix automatically.
+ Report what was found and what was fixed."
+```
+
+---
+
+## Step 5: Verify Locally (Playwright / Antigravity)
 
 **When to use:** Before deploying, you want to make sure the app actually runs and the Firebase connection works.
 
@@ -84,7 +139,7 @@ npm run dev
 
 ---
 
-## Step 5: Go Live (Firebase Hosting)
+## Step 6: Go Live (Firebase Hosting / App Hosting)
 
 **When to use:** The app looks perfect locally and you are ready to publish it to a global URL.
 

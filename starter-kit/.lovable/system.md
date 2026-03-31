@@ -11,7 +11,7 @@
 - **Primary:** #6366f1 (indigo-500)
 - **Accent:** #a855f7 (purple-500)
 - **Success:** #34d399 (emerald-400)
-- **Warning:** #f59e0b (amber-500)
+- **Warning:** #fbbf24 (amber-300)
 - **Error:** #f87171 (red-400)
 
 ### Typography
