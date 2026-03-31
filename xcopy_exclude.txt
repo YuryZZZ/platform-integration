@@ -1,0 +1,16 @@
+.next\
+node_modules\
+.ai\
+.sessions\
+.codebase-map
+.env.local
+build_err
+dev_server.log
+test_results.txt
+_archive\
+_backup_
+tsconfig.tsbuildinfo
+Ctemptestproject
+package-lock.json
+.git\
+.mcp\
