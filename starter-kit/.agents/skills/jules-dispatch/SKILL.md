@@ -1,163 +1,219 @@
 ---
 name: jules-dispatch
-description: Delegate heavy, multi-file, or long-running tasks to Jules AI (Google Labs). Jules runs on a cloud VM with full repo access. Use for tasks > 10 files, security audits, full TypeScript cleanup, test generation, or anything > 30 minutes of IDE work.
+description: Dispatch heavy tasks to Jules AI via GitHub Issues, using the GitHub MCP. Antigravity creates the issue, monitors for the PR, and merges it. The user does nothing.
 ---
 
 # Jules Dispatch Skill
 
 ## Purpose
-Jules is an async AI agent that runs on a cloud VM. Delegation to Jules frees the IDE for other work. Use Jules for heavy lifting, not for small edits.
+Delegate heavy multi-file tasks to Jules AI by creating GitHub Issues via the GitHub MCP. Antigravity creates the issue, polls for Jules's PR, reviews it, and merges it autonomously. The user never touches GitHub manually.
 
 ---
 
-## When to Use Jules (vs Antigravity Direct)
+## When to Use Jules
 
 | Task | Use Jules? |
 |------|-----------|
-| Single file edit | ❌ Do it directly |
-| 2-5 file refactor | ❌ Do it directly |
-| 10+ file refactor | ✅ Jules |
-| Full TypeScript error sweep | ✅ Jules |
-| Generate all unit tests for a module | ✅ Jules |
+| Single file edit (< 100 lines) | ❌ Antigravity does it directly |
+| 2-5 file refactor | ❌ Antigravity does it directly |
+| 10+ file changes | ✅ Jules |
+| Full TypeScript sweep | ✅ Jules |
+| Generate test suite for a module | ✅ Jules |
 | Security audit across all routes | ✅ Jules |
-| Database migration scripts | ✅ Jules |
-| Dependency upgrades (major version) | ✅ Jules |
-| SEO/accessibility audit + auto-fix | ✅ Jules |
-| Converting all pages to new framework version | ✅ Jules |
+| Database migrations | ✅ Jules |
+| Major dependency upgrades | ✅ Jules (L4 — confirm approach first) |
+| SEO/a11y auto-fix across all pages | ✅ Jules |
 
 ---
 
-## Step 1 — Scope the Task Precisely
+## Step 1 — Read Project Identity
 
-Before dispatching, define:
 ```
-SCOPE: exactly which directories/files Jules should touch
-  Include: src/lib/auth/, src/app/api/auth/
-  Exclude: GEMINI.md, docs/, .agents/, apphosting.yaml
-
-ACTION: numbered steps Jules must follow exactly
-  1. Read src/lib/auth/session.ts
-  2. Replace all JWT operations with NextAuth v5 equivalents
-  3. Update all API routes that call verifyJWT()
-  ...
-
-CONSTRAINTS:
-  - Do NOT change public API contracts (route paths, response shapes)
-  - Do NOT bump dependency versions (flag if needed, ask)
-  - All changes must pass: npm run typecheck && npm run test
-  - Follow existing code patterns — read 3 related files first
-
-OUTPUT:
-  - PR titled: "refactor: [description]" | "fix: [description]" | "feat: [description]"
-  - PR description must list every file changed with reason
-  - All files must pass TypeScript strict mode
+Read docs/PROJECT_SPEC.md → extract:
+  GitHub Repo: <org>/<repo>  (e.g. "YuryZZZ/platform-integration")
 ```
 
 ---
 
-## Step 2 — Write the Jules Issue
-
-Create a GitHub Issue as the dispatch vehicle:
+## Step 2 — Create GitHub Issue via MCP (Antigravity does this)
 
 ```javascript
+// Antigravity calls this directly — no user action:
 github.create_issue({
   owner: "<org from PROJECT_SPEC>",
   repo: "<repo from PROJECT_SPEC>",
-  title: "Jules: [task title]",
+  title: "Jules: [specific task title]",
   body: `
 ## Task for Jules AI
 
-### Scope
-**Include:** [directories and files]
-**Exclude:** GEMINI.md, docs/, .agents/, apphosting.yaml, *.env*
+### What to Build / Fix
+[Specific, numbered action steps. Be explicit about file paths and logic.]
 
-### Action Steps
-[numbered steps]
+### Files to Touch
+**Include:**
+  [list of specific files or directories]
 
-### Constraints
-- Do not change public API contracts
-- Do not bump dependency major versions
-- All changes must pass: \`npm run typecheck && npm run test\`
-- Follow existing patterns in the codebase
+**Exclude (do NOT modify):**
+  - GEMINI.md
+  - docs/
+  - .agents/
+  - apphosting.yaml
+  - .env*
+  - *.test.ts, *.spec.ts
 
-### Verification
-Jules must run these before creating the PR:
-- \`npm run typecheck\` → 0 errors
-- \`npm run test\` → all pass
-- \`npm run lint\` → 0 warnings
+### Technical Requirements
+- TypeScript strict mode: \`npx tsc --noEmit\` must exit 0
+- Lint: \`npm run lint\` must exit 0  
+- Build: \`npm run build\` must exit 0
+- No new npm dependencies unless already in package.json
+- No \`any\` types
+- Follow patterns of adjacent files (read them first)
+- Use existing utilities — do not reinvent
+
+### Verification Jules Must Run Before PR
+\`\`\`bash
+npx tsc --noEmit
+npm run lint
+npm run build
+\`\`\`
 
 ### Output Expected
-- PR to master with title: "[type]: [description]"
-- Summary in PR description of every changed file + reason
+PR to master titled: "[type]([scope]): [description]"
+PR description: table of every changed file + one-line reason
   `,
-  labels: ["jules", "automated"]
+  labels: ["jules"]
 })
 ```
 
 ---
 
-## Step 3 — Tag Issue for Jules
+## Step 3 — Record Dispatch
 
-After creating the issue, tag it so Jules picks it up:
-- Label: `jules` (Jules monitors this label on configured repos)
-- Assign: `@jules` (if available in repo settings)
+Update the active task file in `docs/tasks/TASK-NNN.md`:
+```markdown
+**Jules Issue:** #[issue number]
+**Dispatched:** [ISO timestamp]
+**Status:** WAITING_FOR_JULES
+```
+
+Update `docs/CURRENT_STATUS.md`:
+```markdown
+**Current Loop Phase:** PHASE-3 DEVELOP — Waiting for Jules PR #[N]
+```
 
 ---
 
-## Step 4 — Monitor & Merge
+## Step 4 — Poll for Jules PR (Antigravity does this automatically)
+
+Jules typically creates a PR within 10-60 minutes. Poll using:
 
 ```javascript
-// Poll for Jules PR every 5 minutes:
+// Check every 10 minutes:
 github.list_pull_requests({
   owner: "<org>",
   repo: "<repo>",
-  state: "open",
-  head: "jules/"  // Jules PRs branch from "jules/<issue-number>"
+  state: "open"
 })
 
-// When PR appears:
-// 1. Review the changed files list
-// 2. Run visual verification if UI changed
-// 3. Merge if all checks pass:
+// Jules PRs are identified by:
+// - Branch starting with "jules/" 
+// - Title matching the issue title
+// - Author = jules[bot] or jules-ai
+```
+
+While waiting for Jules, **continue other loop work** — don't block. Move to next prioritized task and return to check Jules status periodically.
+
+---
+
+## Step 5 — Review Jules PR
+
+When Jules PR appears:
+
+```javascript
+// Get the PR diff:
+github.get_pull_request({
+  owner: "<org>",
+  repo: "<repo>",
+  pull_number: <pr_number>
+})
+
+// Get changed files:
+github.get_pull_request_files({
+  owner: "<org>",
+  repo: "<repo>",
+  pull_number: <pr_number>
+})
+```
+
+Auto-approve if:
+- ✅ All changed files are within the scoped directories
+- ✅ No changes to excluded files (GEMINI.md, docs/, .agents/, etc.)
+- ✅ All CI checks pass (TypeScript, lint, build)
+- ✅ No new dependencies added unexpectedly
+
+Reject and comment if:
+- ❌ Changes outside scope
+- ❌ CI checks failing
+- ❌ New `any` types introduced
+
+---
+
+## Step 6 — Merge (Antigravity does this)
+
+```javascript
+// Auto-merge if review passes:
 github.merge_pull_request({
   owner: "<org>",
   repo: "<repo>",
   pull_number: <pr_number>,
-  merge_method: "squash"
+  merge_method: "squash",
+  commit_title: "[type]: [description] (Jules #[issue])"
 })
+
+// Pull changes locally:
+run_command: git pull origin master
 ```
 
 ---
 
-## Step 5 — Update Task
+## Step 7 — Update State
 
-After merge:
 ```markdown
-Update TASK-NNN status: DONE
-Note: "Delegated to Jules — PR #NNN merged"
-Update CURRENT_STATUS.md → advance loop phase
+Update docs/tasks/TASK-NNN.md:
+  **Status:** DONE
+  **Jules PR:** #[number] — merged [ISO timestamp]
+
+Update docs/CURRENT_STATUS.md:
+  Advance loop to PHASE-4 VALIDATE
+```
+
+Then immediately run the `qa-audit` skill on the merged changes.
+
+---
+
+## Parallel Dispatch
+
+Jules runs up to 60 parallel VMs. Dispatch multiple issues at once when tasks are independent:
+
+```javascript
+// Create 3 issues simultaneously:
+github.create_issue({ title: "Jules: TypeScript cleanup — src/lib/" ... })
+github.create_issue({ title: "Jules: Unit tests — src/app/api/" ... })  
+github.create_issue({ title: "Jules: SEO audit + fix — src/app/(marketing)/" ... })
+
+// Track all 3 in CURRENT_STATUS.md:
+// - TASK-034: Jules #11 — TypeScript [WAITING]
+// - TASK-035: Jules #12 — Tests [WAITING]
+// - TASK-036: Jules #13 — SEO [WAITING]
 ```
 
 ---
 
-## Jules Limitations — Know These
+## Jules Limitations
 
-| Limitation | Workaround |
-|-----------|-----------|
-| Jules can't access external APIs | Provide mock data or fixtures in the issue |
-| Jules can't run browser tests | Antigravity runs Playwright after merge |
-| Jules takes 10-60 min | Queue multiple Jules tasks simultaneously |
-| Jules may miss project conventions | Include "read these 3 files first" in scope |
-| Jules can't deploy | Always deploy from Antigravity after Jules PR merges |
-
----
-
-## Parallel Dispatch Pattern
-
-Jules supports up to 60 parallel VMs. To run multiple tasks:
-```
-Issue 1: "Jules: Full TypeScript cleanup — src/lib/"
-Issue 2: "Jules: Generate unit tests — src/app/api/"
-Issue 3: "Jules: SEO audit — src/app/(marketing)/"
-```
-Create all 3 issues → all 3 run in parallel → merge in order.
+| Limitation | Antigravity workaround |
+|-----------|----------------------|
+| Jules can't run browser tests | Antigravity runs browser_subagent after merge |
+| Jules may miss project conventions | Include "read these files first" in issue body |
+| Jules can't deploy | Antigravity deploys after Jules PR merges |
+| Jules takes 10-60 min | Queue multiple tasks, continue other loop work |
