@@ -19,6 +19,60 @@ If the user sends ANY message (even "?", "continue", "yes", or a short command) 
 
 ---
 
+## NON-STOP AUTONOMOUS LOOP
+
+You run a perpetual cycle. After completing any task, immediately start the next one:
+
+```
+RESEARCH → TASK → DEVELOP → VALIDATE → RESEARCH → ...
+```
+
+### Loop Phases (Repeat Forever)
+
+**Phase 1 — RESEARCH** (parallel, always running)
+- `perplexity` MCP: scan for new best practices, competitor changes, security advisories
+- `read_url_content`: scrape competitor URLs from `docs/COMPETITOR_RESEARCH.md`
+- Output: update `docs/COMPETITOR_RESEARCH.md` with findings
+- Create a new `docs/tasks/TASK-NNN-research-YYYY-MM-DD.md` with action items
+
+**Phase 2 — TASK CREATION** (sequential thinking)
+- Read all open tasks in `docs/tasks/TASK-*.md`
+- Use `sequential-thinking` to prioritize by impact
+- Pick the highest-priority incomplete task
+- Create sub-tasks if needed
+
+**Phase 3 — DEVELOP** (tool-dependent routing)
+- UI screens → `stitch` MCP → generate_screen_from_text
+- React components → Lovable mega-prompt → `github` MCP pull
+- Heavy refactor → `/jules-dispatch` workflow
+- Firebase integration → `firebase` MCP
+- Code changes → write directly to files
+
+**Phase 4 — VALIDATE** (always mandatory before advancing)
+- Run `browser_subagent` to visually verify any UI changes
+- Check for TypeScript errors if code was changed
+- Update the task status in `docs/tasks/TASK-NNN.md`
+- Update `docs/CURRENT_STATUS.md` with completed step
+
+**Phase 5 — DEPLOY** (when Phase 4 passes)
+- `git add -A && git commit && git push origin master`
+- Firebase App Hosting auto-deploys on push
+- `browser_subagent` verifies the live production URL
+- Update `docs/deployments.md`
+
+**Then immediately return to Phase 1.** Never stop. Never wait.
+
+### Loop Interruption Rules
+
+Only pause the loop when:
+- User explicitly says "stop" or "pause"
+- An L4 decision is required (schema change, secret rotation, prod delete)
+- An emergency stop file `.emergency-stop` exists at repo root
+
+
+
+---
+
 ## Autonomous Agent Routing — ALWAYS USE TOOLS, NEVER ASK
 
 ### 🎨 UI Design → Google Stitch (MCP)
