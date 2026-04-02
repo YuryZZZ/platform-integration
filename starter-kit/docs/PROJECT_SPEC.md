@@ -43,6 +43,17 @@ providing hybrid search, evidence assembly, and AI-powered document analysis._
 | **IDE**        | Antigravity           | Agent-first development    |
 | **Async Agent**| Jules                 | Cloud VM tasks — SEO, tests, security |
 
+### Project Identifiers
+<!-- FILL THESE IN after setup — Antigravity reads these to route to the right tools -->
+
+| Key | Value |
+|-----|-------|
+| **Stitch Project ID** | `<!-- run: mcp_StitchMCP_list_projects to find yours -->` |
+| **Firebase Project ID** | `<!-- e.g. my-project-12345 -->` |
+| **GitHub Repo** | `<!-- e.g. YuryZZZ/my-new-project -->` |
+| **Production URL** | `<!-- e.g. https://my-project.web.app -->` |
+| **Dev URL** | `http://localhost:3000` |
+
 ### Deploy Units
 
 ```
