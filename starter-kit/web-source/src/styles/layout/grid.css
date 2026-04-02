@@ -1,0 +1,66 @@
+﻿/**
+ * Named CSS Grid Layout System
+ * Provides full-width, feature, popout, and content zones
+ */
+
+:root {
+  --content-max-width: 70ch;
+  --content-padding: 2rem;
+  --feature-max-width: 12rem;
+  --popout-max-width: 8rem;
+  --space-fluid-md: 1rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--space-fluid-md), 1fr)
+    [feature-start] minmax(0, var(--feature-max-width))
+    [popout-start] minmax(0, var(--popout-max-width))
+    [content-start] min(var(--content-max-width), calc(100% - var(--content-padding) * 2))
+    [content-end] minmax(0, var(--popout-max-width))
+    [popout-end] minmax(0, var(--feature-max-width))
+    [feature-end] minmax(var(--space-fluid-md), 1fr)
+    [full-end];
+  gap: 0;
+}
+
+/* Grid utility classes for column placement */
+.grid-full {
+  grid-column: full;
+}
+
+.grid-content {
+  grid-column: content;
+}
+
+.grid-feature {
+  grid-column: feature;
+}
+
+.grid-popout {
+  grid-column: popout;
+}
+
+.grid-feature-start {
+  grid-column-start: feature-start;
+}
+
+.grid-feature-end {
+  grid-column-end: feature-end;
+}
+
+.grid-popout-start {
+  grid-column-start: popout-start;
+}
+
+.grid-popout-end {
+  grid-column-end: popout-end;
+}
+
+/* Subgrid support for nested grids */
+@supports (grid-template-columns: subgrid) {
+  .content-grid > .content-grid {
+    grid-template-columns: subgrid;
+  }
+}

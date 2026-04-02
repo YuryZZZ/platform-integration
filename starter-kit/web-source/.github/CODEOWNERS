@@ -1,0 +1,7 @@
+﻿# Default owners
+* @your-org/core-team
+
+# Component ownership
+/src/components/ui/ @your-org/ui-team
+/src/components/cinematic/ @your-org/tv-team
+/src/lib/a11y/ @your-org/a11y-team

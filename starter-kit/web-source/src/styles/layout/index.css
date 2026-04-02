@@ -1,0 +1,8 @@
+﻿/**
+ * Layout styles entry point
+ * Imports all layout-related CSS modules
+ */
+
+@import './grid.css';
+@import './shell.css';
+@import './container-queries.css';

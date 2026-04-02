@@ -1,0 +1,144 @@
+﻿.tv-menu {
+  display: flex;
+  outline: none;
+  user-select: none;
+}
+
+.tv-menu--vertical {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tv-menu--horizontal {
+  flex-direction: row;
+  gap: 8px;
+}
+
+/* Variants */
+.tv-menu--default .tv-menu-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--text-primary, #1a1a1a);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.tv-menu--pills .tv-menu-item {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: transparent;
+  color: var(--text-primary, #1a1a1a);
+  border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.tv-menu--tabs .tv-menu-item {
+  padding: 8px 16px;
+  border-bottom: 2px solid transparent;
+  background-color: transparent;
+  color: var(--text-primary, #1a1a1a);
+  border-radius: 0;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.tv-menu--sidebar .tv-menu-item {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-primary, #1a1a1a);
+  margin-bottom: 2px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Sizes */
+.tv-menu--sm .tv-menu-item {
+  padding: 6px 10px;
+  font-size: 0.875rem;
+}
+
+.tv-menu--md .tv-menu-item {
+  padding: 8px 12px;
+  font-size: 1rem;
+}
+
+.tv-menu--lg .tv-menu-item {
+  padding: 10px 16px;
+  font-size: 1.125rem;
+}
+
+.tv-menu--xl .tv-menu-item {
+  padding: 12px 20px;
+  font-size: 1.25rem;
+}
+
+/* Menu Item Base */
+.tv-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.tv-menu-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.tv-menu-item__label {
+  flex: 1;
+}
+
+.tv-menu-item__shortcut {
+  font-size: 0.875rem;
+  opacity: 0.6;
+  margin-left: auto;
+}
+
+.tv-menu-item__content {
+  width: 100%;
+}
+
+/* States */
+.tv-menu-item:hover:not(.tv-menu-item--disabled) {
+  background-color: var(--bg-hover, #f0f0f0);
+}
+
+.tv-menu-item--focused:not(.tv-menu-item--disabled) {
+  background-color: var(--bg-active, #e0e0e0);
+  box-shadow: 0 0 0 2px var(--focus-ring, #0066cc);
+}
+
+.tv-menu-item--active:not(.tv-menu-item--disabled) {
+  background-color: var(--bg-selected, #d0e6ff);
+  color: var(--text-selected, #0066cc);
+}
+
+.tv-menu-item--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Variant-specific states */
+.tv-menu--pills .tv-menu-item--active:not(.tv-menu-item--disabled) {
+  background-color: var(--bg-selected, #d0e6ff);
+  border-color: var(--border-selected, #0066cc);
+}
+
+.tv-menu--tabs .tv-menu-item--active:not(.tv-menu-item--disabled) {
+  border-bottom-color: var(--border-selected, #0066cc);
+  color: var(--text-selected, #0066cc);
+}
+
+.tv-menu--sidebar .tv-menu-item--active:not(.tv-menu-item--disabled) {
+  background-color: var(--bg-selected, #d0e6ff);
+}
+
+/* Animation */
+.tv-menu-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

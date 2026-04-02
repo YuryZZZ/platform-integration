@@ -1,0 +1,64 @@
+# Spec 56, 57: Kubernetes workload autoscalers and metrics tracking limits
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-web
+  labels:
+    app: nexus-ai
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nexus-ai
+  template:
+    metadata:
+      labels:
+        app: nexus-ai
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+    spec:
+      containers:
+      - name: web
+        image: gcr.io/nexus-ai/web:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+# Horizontal Pod Autoscaler (HPA) Spec 56
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nexus-web-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nexus-web
+  minReplicas: 2
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70

@@ -1,20 +1,19 @@
 # Quick Start: New Project Setup
 
-> Follow these steps to set up a new project with the full Lovable → GitHub → Firebase → Antigravity → Stitch stack.
+> Full stack: **Nexus UI → Antigravity → Jules → Firebase**
+> From zero to live in < 2 hours.
 
 ---
 
 ## Prerequisites
 
-Before starting, ensure you have:
-
-- [ ] **Node.js** 18+ installed → `node --version`
-- [ ] **Python** 3.11+ installed → `python --version`
+- [ ] **Node.js** 18+ → `node --version`
 - [ ] **Git** configured → `git config user.name`
 - [ ] **Google Cloud SDK** → `gcloud --version`
 - [ ] **Firebase CLI** → `npm install -g firebase-tools`
 - [ ] **Antigravity IDE** installed
-- [ ] **Lovable** account at https://lovable.dev
+- [ ] **Jules API key** (optional but recommended) → https://jules.google.com → Settings → API Keys
+- [ ] **Jules GitHub App** installed on your repo → https://github.com/apps/jules-by-google
 
 ---
 

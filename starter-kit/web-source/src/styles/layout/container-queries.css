@@ -1,0 +1,88 @@
+﻿/**
+ * Container Queries for component-level responsive design
+ * Provides container-based responsive behavior with media query fallbacks
+ */
+
+/* Base card container setup */
+.card {
+  width: 100%;
+}
+
+/* Container query support */
+@supports (container-type: inline-size) {
+  .card {
+    container-type: inline-size;
+    container-name: card;
+  }
+
+  @container (min-width: 400px) {
+    .card-content {
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  @container (min-width: 600px) {
+    .card-content {
+      padding: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  @container (min-width: 900px) {
+    .card-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+/* Media query fallback for browsers without container query support */
+@media (min-width: 768px) {
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Container query for sidebar layout */
+@supports (container-type: inline-size) {
+  .sidebar-container {
+    container-type: inline-size;
+    container-name: sidebar;
+  }
+
+  @container sidebar (min-width: 250px) {
+    .sidebar-content {
+      display: block;
+    }
+  }
+
+  @container sidebar (max-width: 249px) {
+    .sidebar-content {
+      display: none;
+    }
+
+    .sidebar-toggle {
+      display: block;
+    }
+  }
+}

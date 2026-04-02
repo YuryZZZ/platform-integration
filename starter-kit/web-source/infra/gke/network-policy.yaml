@@ -1,0 +1,69 @@
+# Spec 55: Absolute GKE ingress network policy controls mapping exact traffic rules.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-external-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: nexus-ai
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 3000
+---
+# Egress allowing outbound to Payload DB / External APIs (Spec 55)
+# Restricted to VPC-internal Cloud SQL + Private Google Access endpoints.
+# Update CIDRs when Cloud SQL instance IP changes.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-db-egress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: nexus-ai
+  policyTypes:
+  - Egress
+  egress:
+  # Cloud SQL Private IP (VPC peering range)
+  # Replace with your specific Cloud SQL private IP CIDR, e.g. 10.10.0.0/24
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    ports:
+    - protocol: TCP
+      port: 5432
+  # Private Google Access (googleapis.com endpoints)
+  - to:
+    - ipBlock:
+        cidr: 199.36.153.8/30
+    ports:
+    - protocol: TCP
+      port: 443
+  # DNS resolution (required for service discovery)
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53

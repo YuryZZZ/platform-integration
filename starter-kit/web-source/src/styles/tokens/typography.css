@@ -1,0 +1,47 @@
+/**
+ * Design Tokens: Typography
+ * Fluid type scale with clamp() for responsive sizing
+ */
+
+:root {
+  /* Font families */
+  --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family-display: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family-mono: 'JetBrains Mono', Consolas, monospace;
+
+  /* Fluid font sizes with modern clamp() curves (min 320px, max 1200px) */
+  --font-size-xs: clamp(0.75rem, 0.71rem + 0.18vw, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 0.84rem + 0.18vw, 1rem);
+  --font-size-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --font-size-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.25rem);
+  --font-size-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --font-size-2xl: clamp(1.5rem, 1.25rem + 1.25vw, 2.25rem);
+  --font-size-3xl: clamp(1.875rem, 1.5rem + 2vw, 3rem);
+  --font-size-4xl: clamp(2.25rem, 1.75rem + 3vw, 4rem);
+  --font-size-5xl: clamp(3rem, 2.25rem + 4.5vw, 5.5rem);
+  --font-size-6xl: clamp(3.75rem, 2.75rem + 6.5vw, 7rem);
+  --font-size-7xl: clamp(4.5rem, 3.25rem + 8vw, 9rem);
+
+  /* Line heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Letter spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* Text transforms */
+  --text-transform-none: none;
+  --text-transform-uppercase: uppercase;
+  --text-transform-lowercase: lowercase;
+  --text-transform-capitalize: capitalize;
+}

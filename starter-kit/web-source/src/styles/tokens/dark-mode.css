@@ -1,0 +1,57 @@
+/**
+ * Design Tokens: Dark Mode Overrides
+ * Modifying colors for standard dark themes
+ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Neutral overrides (invert scale) */
+    --color-neutral-50: #111827;
+    --color-neutral-100: #1f2937;
+    --color-neutral-200: #374151;
+    --color-neutral-300: #4b5563;
+    --color-neutral-400: #6b7280;
+    --color-neutral-500: #9ca3af;
+    --color-neutral-600: #d1d5db;
+    --color-neutral-700: #e5e7eb;
+    --color-neutral-800: #f3f4f6;
+    --color-neutral-900: #f9fafb;
+
+    /* Semantic shades inverted for better contrast */
+    --color-success-light: #065f46;
+    --color-success-dark: #d1fae5;
+    
+    --color-warning-light: #92400e;
+    --color-warning-dark: #fef3c7;
+    
+    --color-error-light: #991b1b;
+    --color-error-dark: #fee2e2;
+    
+    --color-info-light: #1e40af;
+    --color-info-dark: #dbeafe;
+
+    /* Surface and background overrides */
+    --color-surface: #1f2937;
+    --color-surface-elevated: #374151;
+    --color-surface-sunken: #111827;
+    --color-background: #111827;
+    --color-background-overlay: rgba(0, 0, 0, 0.7);
+
+    /* Text color overrides */
+    --color-text: #f9fafb;
+    --color-text-secondary: #d1d5db;
+    --color-text-tertiary: #9ca3af;
+    --color-text-inverse: #111827;
+    --color-text-link: var(--color-primary-400);
+    --color-text-link-hover: var(--color-primary-300);
+
+    /* Border color overrides */
+    --color-border: #374151;
+    --color-border-strong: #4b5563;
+    
+    /* Interactive states overrides */
+    --color-hover-overlay: rgba(255, 255, 255, 0.05);
+    --color-active-overlay: rgba(255, 255, 255, 0.1);
+    --color-disabled-overlay: rgba(255, 255, 255, 0.1);
+  }
+}

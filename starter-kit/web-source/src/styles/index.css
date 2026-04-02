@@ -1,0 +1,21 @@
+﻿/**
+ * Nexus AI Design System - Main Styles
+ * 
+ * This is the main entry point for all design system styles.
+ * Import this in your application's entry point.
+ */
+
+/* Base Variables and Tokens */
+@import './tokens.css';
+
+/* Animation Keyframes */
+@import './animations.css';
+
+/* Base Component Styles */
+@import './base.css';
+
+/* Utility Classes */
+@import './utilities.css';
+
+/* TV/Cinematic Mode Specific Styles */
+@import './cinematic.css';

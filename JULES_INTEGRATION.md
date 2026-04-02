@@ -364,33 +364,26 @@ done
 
 ## 7. Integration with Antigravity
 
+### Native Orchestration via the REST API
+Antigravity now operates as a **Jules Administrator**. It does not just hand off tasks; it actively drives Jules through the `/jules-dispatch` global workflow using the newly expanded Jules API.
+
+```
+       Antigravity (Central Orchestrator)
+         │
+         ├──→ 1. Reads STITCH_DESIGN.md (Grabs Design Tokens)
+         ├──→ 2. Compiles Payload constraints + pushes local code
+         ├──→ 3. `POST /sessions` (Spawns Jules VM Container)
+         │
+         ├──→ 4. `GET /activities` (Watches Jules progress)
+         ├──→ 5. `POST :sendMessage` (Corrects Jules mid-flight)
+         └──→ 6. `POST :approvePlan` (Passes halting blocks)
+```
+
 ### The "Better Together" Workflow
-
-```
-Developer in Antigravity IDE
-  │
-  ├── Local work (synchronous)
-  │     └── Feature development, debugging, UI polish
-  │     └── Uses MCP servers (Firebase, GitHub, Cloud Run)
-  │
-  ├── Heavy work → delegate to Jules (asynchronous)
-  │     └── /jules refactor entire test suite to Jest
-  │     └── /jules update all dependencies
-  │     └── /jules add TypeScript types to all JS files
-  │
-  └── Review Jules PRs → merge → continue local work
-        └── git pull origin master
-        └── Verify changes locally
-        └── Deploy via /deploy-changed workflow
-```
-
-### Workflow Tip: Jules → Antigravity Handoff
-
-1. Jules creates a PR with code changes
-2. Antigravity pulls the branch: `git pull origin master`
-3. Antigravity runs verification: `/verify-pyramid`
-4. Antigravity deploys: `/deploy-changed`
-5. Antigravity updates docs: `docs/deployments.md`
+1. **Stitch → Local**: Antigravity or the human dev executes `/apply-stitch-design` locally to lock the visual UI components.
+2. **Local → Jules**: Executing `/jules-dispatch` forces Jules to pull from GitHub, automatically injecting the Stitch design rules so Jules generates visually compliant code in its VM.
+3. **Jules → GitHub**: Jules outputs the code to GitHub as a Pull Request.
+4. **GitHub → Antigravity**: Antigravity runs `git pull`, visually checks the deployment via its own headless browser, and triggers `/deploy-changed` to Firebase App Hosting.
 
 ---
 

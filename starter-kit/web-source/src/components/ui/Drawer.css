@@ -1,0 +1,128 @@
+﻿.drawer__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.drawer {
+  position: fixed;
+  background-color: #ffffff;
+  z-index: 1001;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Position variants */
+.drawer--left {
+  top: 0;
+  left: 0;
+  height: 100%;
+  transform: translateX(0);
+}
+
+.drawer--right {
+  top: 0;
+  right: 0;
+  height: 100%;
+  transform: translateX(0);
+}
+
+.drawer--top {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.drawer--bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+/* Size variants for left/right */
+.drawer--left.drawer--sm,
+.drawer--right.drawer--sm {
+  width: 256px;
+}
+
+.drawer--left.drawer--md,
+.drawer--right.drawer--md {
+  width: 384px;
+}
+
+.drawer--left.drawer--lg,
+.drawer--right.drawer--lg {
+  width: 512px;
+}
+
+.drawer--left.drawer--full,
+.drawer--right.drawer--full {
+  width: 100%;
+}
+
+/* Size variants for top/bottom */
+.drawer--top.drawer--sm,
+.drawer--bottom.drawer--sm {
+  height: 200px;
+}
+
+.drawer--top.drawer--md,
+.drawer--bottom.drawer--md {
+  height: 320px;
+}
+
+.drawer--top.drawer--lg,
+.drawer--bottom.drawer--lg {
+  height: 480px;
+}
+
+.drawer--top.drawer--full,
+.drawer--bottom.drawer--full {
+  height: 100%;
+}
+
+.drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.drawer__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.drawer__close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.drawer__close:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.drawer__content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}

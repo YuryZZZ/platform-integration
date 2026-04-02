@@ -1,0 +1,31 @@
+﻿/**
+ * Full-screen shell layout
+ * Provides a flexible column layout that fills the viewport
+ */
+
+.full-screen-shell {
+  /* Fallback for browsers without dvh support */
+  min-height: 100vh;
+  /* Modern dynamic viewport height */
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.full-screen-shell > header,
+.full-screen-shell > footer {
+  flex-shrink: 0;
+}
+
+.full-screen-shell > main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure shell works in nested contexts */
+.shell-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,190 @@
+/**
+ * Gemini AI Client — Google AI Studio
+ * ─────────────────────────────────────────────────────────────
+ * Pre-built utility for every project in this template.
+ * Uses @google/generative-ai SDK with the GOOGLE_AI_API_KEY from .env.local
+ *
+ * Usage:
+ *   import { gemini, geminiPro } from '@/lib/gemini';
+ *   const text = await gemini.generate('Your prompt here');
+ *
+ * Models:
+ *   gemini      → gemini-2.0-flash  (fast, default)
+ *   geminiPro   → gemini-2.5-pro    (complex reasoning)
+ *
+ * Docs: https://ai.google.dev/docs
+ * ─────────────────────────────────────────────────────────────
+ */
+
+import {
+  GoogleGenerativeAI,
+  GenerateContentResult,
+  Part,
+} from '@google/generative-ai';
+
+// ── Config ────────────────────────────────────────────────────
+
+const API_KEY   = process.env.GOOGLE_AI_API_KEY ?? '';
+const MODEL     = process.env.GOOGLE_AI_MODEL     ?? 'gemini-2.0-flash';
+const MODEL_PRO = process.env.GOOGLE_AI_MODEL_PRO ?? 'gemini-2.5-pro';
+
+if (!API_KEY && typeof window === 'undefined') {
+  console.warn('[gemini] GOOGLE_AI_API_KEY is not set. AI features will not work.');
+}
+
+const client = new GoogleGenerativeAI(API_KEY);
+
+// ── Types ─────────────────────────────────────────────────────
+
+export interface GenerateOptions {
+  /** Override the default model for this call */
+  model?: string;
+  /** System-level instructions (sets AI persona / constraints) */
+  systemPrompt?: string;
+  /** Max tokens to generate */
+  maxOutputTokens?: number;
+  /** Temperature 0–2 (0=deterministic, 1=balanced, 2=creative) */
+  temperature?: number;
+}
+
+export interface GeminiClient {
+  /** Generate text from a prompt */
+  generate(prompt: string, opts?: GenerateOptions): Promise<string>;
+  /** Stream text tokens as they generate */
+  stream(prompt: string, opts?: GenerateOptions): Promise<ReadableStream<string>>;
+  /** Analyse an image + optional text prompt */
+  vision(imageBase64: string, prompt?: string, opts?: GenerateOptions): Promise<string>;
+  /** Low-level access to the underlying SDK */
+  raw(modelName?: string): ReturnType<typeof client.getGenerativeModel>;
+}
+
+// ── Core helper ───────────────────────────────────────────────
+
+function getModel(modelName: string, opts: GenerateOptions = {}) {
+  return client.getGenerativeModel({
+    model: opts.model ?? modelName,
+    systemInstruction: opts.systemPrompt,
+    generationConfig: {
+      maxOutputTokens: opts.maxOutputTokens ?? 2048,
+      temperature:     opts.temperature     ?? 1.0,
+    },
+  });
+}
+
+function extractText(result: GenerateContentResult): string {
+  return result.response.text();
+}
+
+// ── GeminiClient factory ──────────────────────────────────────
+
+function makeClient(defaultModel: string): GeminiClient {
+  return {
+    async generate(prompt, opts = {}) {
+      const model  = getModel(defaultModel, opts);
+      const result = await model.generateContent(prompt);
+      return extractText(result);
+    },
+
+    async stream(prompt, opts = {}) {
+      const model  = getModel(defaultModel, opts);
+      const result = await model.generateContentStream(prompt);
+      
+      return new ReadableStream<string>({
+        async start(controller) {
+          for await (const chunk of result.stream) {
+            controller.enqueue(chunk.text());
+          }
+          controller.close();
+        },
+      });
+    },
+
+    async vision(imageBase64, prompt = 'Describe this image.', opts = {}) {
+      const model = getModel(defaultModel, opts);
+      
+      // Strip data URL prefix if present
+      const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+      
+      const parts: Part[] = [
+        { inlineData: { mimeType: 'image/jpeg', data: base64Data } },
+        { text: prompt },
+      ];
+      
+      const result = await model.generateContent({ contents: [{ role: 'user', parts }] });
+      return extractText(result);
+    },
+
+    raw(modelName) {
+      return client.getGenerativeModel({ model: modelName ?? defaultModel });
+    },
+  };
+}
+
+// ── Exported clients ──────────────────────────────────────────
+
+/** Fast model — use for chat, content generation, quick tasks */
+export const gemini = makeClient(MODEL);
+
+/** Pro model — use for complex reasoning, long documents, analysis */
+export const geminiPro = makeClient(MODEL_PRO);
+
+/** Multi-turn chat session */
+export function createChat(opts: GenerateOptions = {}) {
+  const model = getModel(MODEL, opts);
+  return model.startChat({
+    history: [],
+  });
+}
+
+// ── Convenience wrappers ──────────────────────────────────────
+
+/**
+ * Generate a JSON object (auto-parses the response).
+ * Include instructions to return JSON in your prompt.
+ */
+export async function generateJSON<T = unknown>(
+  prompt: string,
+  opts: GenerateOptions = {}
+): Promise<T> {
+  const text = await gemini.generate(
+    `${prompt}\n\nRespond with valid JSON only. No markdown, no explanation.`,
+    { ...opts, temperature: 0.2 }
+  );
+  
+  // Strip markdown code fences if present
+  const cleaned = text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
+  return JSON.parse(cleaned) as T;
+}
+
+/**
+ * Summarise text to N sentences.
+ */
+export async function summarise(text: string, sentences = 3): Promise<string> {
+  return gemini.generate(
+    `Summarise the following text in exactly ${sentences} sentence(s). Be concise and factual:\n\n${text}`
+  );
+}
+
+/**
+ * Generate SEO meta description (155 chars max).
+ */
+export async function generateMetaDescription(
+  pageContent: string,
+  keywords: string[] = []
+): Promise<string> {
+  const kw = keywords.length ? ` Include keywords: ${keywords.join(', ')}.` : '';
+  return gemini.generate(
+    `Write a compelling SEO meta description (max 155 characters) for this content.${kw}\n\n${pageContent}`,
+    { temperature: 0.7 }
+  );
+}
+
+/**
+ * Translate text to target language.
+ */
+export async function translate(text: string, targetLanguage: string): Promise<string> {
+  return gemini.generate(
+    `Translate the following text to ${targetLanguage}. Return only the translated text:\n\n${text}`,
+    { temperature: 0.1 }
+  );
+}

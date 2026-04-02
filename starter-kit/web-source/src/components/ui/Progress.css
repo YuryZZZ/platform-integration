@@ -1,0 +1,14 @@
+﻿.progress { width: 100%; }
+.progress--sm { height: 4px; }
+.progress--md { height: 8px; }
+.progress--lg { height: 12px; }
+.progress__track { background: #e3f2f7; border-radius: 4px; overflow: hidden; }
+.progress__fill { background: #3b82f6; height: 100%; transition: width 0.3s ease; }
+.progress--circle { border-radius: 9999px; }
+.progress--circle .progress__track { border-radius: 9999px; }
+.progress--circle .progress__fill { border-radius: 9999px; }
+.progress__value {
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Nexus AI Platform",
+  "short_name": "Nexus AI",
+  "description": "AI-powered platform for conversational AI, workflow automation, knowledge management, and multi-site CMS.",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#020817",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Chat with AI",
+      "short_name": "Chat",
+      "url": "/chat",
+      "description": "Open the AI chat interface"
+    },
+    {
+      "name": "Knowledge Base",
+      "short_name": "Knowledge",
+      "url": "/knowledge",
+      "description": "Search your knowledge base"
+    },
+    {
+      "name": "Workflows",
+      "short_name": "Workflows",
+      "url": "/workflows",
+      "description": "Manage automation workflows"
+    }
+  ]
+}

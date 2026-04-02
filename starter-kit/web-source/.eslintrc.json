@@ -1,0 +1,36 @@
+{
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-empty-object-type": "warn",
+    "@typescript-eslint/consistent-type-imports": ["warn", { "prefer": "type-imports" }],
+    "react/no-unescaped-entities": "off",
+    "react-hooks/rules-of-hooks": "warn",
+
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+    "no-debugger": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-func": "error",
+    "no-script-url": "error",
+    "no-restricted-globals": ["error", "event", "fdescribe"],
+    "no-restricted-imports": ["warn", {
+      "patterns": [
+        { "group": ["../**/node_modules/**"], "message": "Do not import from node_modules via relative path." }
+      ]
+    }]
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts", "*.test.tsx", "*.stories.tsx"],
+      "rules": {
+        "no-console": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["node_modules/", ".next/", "cms/", "portable/", "sample/", "_archive/", "_backup_portable_final/"]
+}

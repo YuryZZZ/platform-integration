@@ -29,6 +29,54 @@ Best for: Developers who want to stay entirely inside the Antigravity IDE chat w
 
 ---
 
+## Step 0: Bootstrap a New Project Folder (MANDATORY FIRST STEP)
+
+> **Do this before anything else.** The `platform-integration` starter kit contains a `start.bat` that creates a new project directory, copies all hardened infrastructure, and wires up the multi-agent ecosystem.
+
+```powershell
+# 1. Navigate to the platform-integration folder
+cd C:\Users\yuryz\Documents\GitHub\Samples\platform-integration
+
+# 2. Run the bootstrapper — it will ask for a project name
+.\start.bat
+
+# --- What start.bat creates ---
+# my-new-project/
+# ├── src/app/(marketing)/    ← Design template output (marketing pages)
+# ├── _platform/              ← Full platform reference (auth, DB, CMS, AI routes)
+# │   └── src/app/
+# │       ├── (app)/          ← Authenticated app shell
+# │       ├── (auth)/         ← Login / Register
+# │       ├── (payload)/      ← Payload CMS admin
+# │       └── api/            ← All API routes
+# ├── docs/                   ← DESIGN.md, PROJECT_SPEC, CURRENT_STATUS, deployments
+# ├── .agents/workflows/      ← Antigravity automation workflows
+# ├── .github/workflows/      ← CI/CD (auto_sync.yml)
+# ├── functions/api-gateway/  ← Cloud Run API template
+# └── web/                    ← Next.js app shell
+```
+
+### Understanding the Two-Layer Structure
+
+The template is intentionally split into two layers:
+
+| Layer | Location | Purpose | In active build? |
+|---|---|---|---|
+| **Marketing site** | `src/app/(marketing)/` | Public pages — always builds clean | ✅ Yes |
+| **Full platform** | `_platform/src/` | Auth, DB, CMS, AI gateway, all API routes | ❌ Reference only |
+
+The `_platform/` folder is **not automatically active**. It's a reference merge source. After bootstrapping, selectively copy what you need:
+
+```powershell
+# Optional: merge the full platform into your active src/
+xcopy /E /I /Y "_platform\src" ".\src"
+# Then: configure .env.local from .env.example and npm install
+```
+
+> **Note**: `DESIGN.md` and `PROJECT_SPEC.md` in `docs/` are the source of truth for all agents (Antigravity, Lovable, Jules, Stitch). Fill them in before generating any UI.
+
+---
+
 ## Step 0.5: Competitor Research (Common — Both Paths)
 
 Before building anything, feed a competitor's live site into the AI for market intelligence:

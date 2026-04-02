@@ -1,174 +1,183 @@
 # Platform Integration — Master Index
+# The Global Project Template
 
-# Lovable → GitHub → Firebase → Antigravity → Cloud Run → Stitch → Jules → Vercel
-
-> **This is the single folder containing EVERYTHING about the full multi-platform
-> development workflow.** Every document, script, config, workflow, and starter template
-> lives here or is referenced from here.
+> **This folder IS the global template.**
+> Copy `starter-kit/` to any new web project. Run `init.ps1`. Build.
+>
+> Stack: **Nexus UI → Google AI Studio (Gemini) → Jules → Firebase → Antigravity**
 
 ---
 
-## 📂 Folder Contents
+## 📂 Top-Level Structure
 
 ```
 platform-integration/
 │
-├── INDEX.md                        ← YOU ARE HERE
+├── INDEX.md                         ← YOU ARE HERE
 │
-│── ──── DOCUMENTATION ──── ────
-├── PROMPT_TO_PORTAL.md             ★ Start Here — Idea to live URL in 7 steps
-├── README.md                       Platform overview (35 KB)
-├── NEW_PROJECT_GUIDE.md            Full A-to-Z project setup (40 KB, 10 phases)
-├── AUTH_FLOW.md                    Every credential & token (28 KB, 11 sections)
-├── UI_PROJECT_REFERENCE.md         Complete UI project ref (27 KB, 17 sections)
-├── QUICK_START.md                  5-minute quick start (4 KB)
-├── JULES_INTEGRATION.md            Async cloud agent guide (NEW — CLI + REST API)
-├── VERCEL_DEPLOYMENT.md            Alternative edge deployment (NEW — staging, SPA routing)
-├── STITCH_DESIGN.md                Google Stitch UI design platform (NEW — MCP + skills)
-├── review.txt                      Architectural vision document (29 KB)
+│── ──── ENTRY POINTS ────
+├── bootstrap_new_project.bat        ★ GUI bootstrapper — opens folder picker, merges template
+├── starter-kit/init.ps1             ★ CLI initialiser — run inside a copied starter-kit
 │
-│── ──── SCRIPTS ──── ────
-├── scripts/
-│   ├── auto-sync.ps1               GitHub→Local auto-sync daemon (30s poll)
-│   └── sync_lovable.ps1            Lovable→repo sync bridge (parameterized)
+│── ──── DOCUMENTATION ────
+├── PROMPT_TO_PORTAL.md              Idea → live URL in 7 steps
+├── README.md                        Platform overview
+├── NEW_PROJECT_GUIDE.md             Full A-to-Z setup (10 phases)
+├── AUTH_FLOW.md                     Every credential & token (11 sections)
+├── QUICK_START.md                   5-minute quick start
+├── JULES_INTEGRATION.md             Jules async cloud agent (CLI + REST API)
+├── GOOGLE_AI_STUDIO.md              ★ NEW — Gemini API integration guide
+├── STITCH_DESIGN.md                 Google Stitch UI design (MCP + skills)
+├── VERCEL_DEPLOYMENT.md             Alternative edge deployment
+├── UI_PROJECT_REFERENCE.md          Complete UI project reference
 │
-│── ──── WORKFLOWS ──── ────
-├── workflows/
-│   ├── lovable-sync.md             Antigravity workflow: Lovable→GitHub→deploy
-│   └── github-sync.md              Antigravity workflow: pull + stash + restore
+│── ──── CONFIGS & SCRIPTS ────
+├── configs/                         Firebase, .firebaserc, MCP reference configs
+├── scripts/                         auto-sync.ps1, sync_lovable.ps1
+├── workflows/                       Antigravity lovable-sync, github-sync
+├── .env.local                       ★ YOUR PERSONAL API KEYS (git-ignored)
 │
-│── ──── CONFIGS ──── ────
-├── configs/
-│   ├── firebase.json.reference     Firebase Hosting reference config
-│   ├── firebaserc.reference        Firebase project alias reference
-│   └── mcp_config.json.reference   MCP servers reference config (10 servers)
-│
-│── ──── STARTER KIT ──── ────
-└── starter-kit/                    Copy-and-go project template
-    ├── README.md                   Starter kit usage guide
-    ├── init.ps1                    One-click project initializer
-    ├── firebase.json               Template Firebase config
-    ├── .firebaserc                  Template project alias
-    ├── .gitignore                   Git ignore template
-    ├── .agents/workflows/           Template Antigravity workflows
-    ├── .github/workflows/           Template CI/CD (auto_sync.yml)
-    ├── docs/                        Template docs (CURRENT_STATUS, PROJECT_SPEC, DESIGN, deployments)
-    ├── functions/api-gateway/       Template Cloud Run service (FastAPI + deploy.ps1)
-    ├── scripts/auto-sync.ps1        Template auto-sync script
-    ├── specs/TASK.md                Template task tracker
-    ├── ui/validate-parallel.js      Template E2E validator
-    └── web/                         Template Next.js app shell
+│── ──── STARTER KIT ──── (copy this to any new project)
+└── starter-kit/
+    ├── init.ps1                     One-click project initialiser (11 steps)
+    ├── firebase.json                Firebase Hosting config
+    ├── .firebaserc                  Project alias template
+    ├── .gitignore                   Git ignore (includes .env.local)
+    ├── apphosting.yaml              Firebase App Hosting config
+    ├── vercel.json                  Alternative Vercel deploy config
+    ├── firestore.rules              Firestore security rules template
+    │
+    ├── .agents/
+    │   ├── IDE_EXPANSION_RULES.md   ★ Antigravity super-prompt expansion engine
+    │   └── workflows/
+    │       ├── master-flow.md       ★ Full lifecycle (research → Jules → deploy)
+    │       ├── jules-dispatch.md    ★ /jules-dispatch — 6 ready task templates
+    │       ├── jules-handoff.md     ★ /jules-handoff — PR review + merge flow
+    │       ├── verify-pyramid.md    ★ /verify-pyramid — TS, build, test, visual
+    │       └── deploy-changed.md   ★ /deploy-changed — build, deploy, log
+    │
+    ├── docs/
+    │   ├── PROJECT_SPEC.md          Fill in: purpose, architecture, data model
+    │   ├── DESIGN.md                Fill in: brand colors, typography
+    │   ├── CURRENT_STATUS.md        Auto-generated by init.ps1
+    │   ├── COMPETITOR_RESEARCH.md   Fill in: market intelligence
+    │   ├── deployments.md           Auto-updated by /deploy-changed
+    │   ├── JULES_INTEGRATION.md     ★ Jules task templates + PR handoff
+    │   ├── STITCH_INTEGRATION.md    ★ Stitch MCP design patterns
+    │   ├── LOVABLE_INTEGRATION.md   ★ Lovable prompt rules + sync flow
+    │   ├── GITHUB_INTEGRATION.md    ★ Branch strategy + PR review + MCP commands
+    │   ├── JULES_PROMPT_GUIDE.md    Legacy Jules delegation patterns
+    │   ├── PAYLOAD_PROMPT_GUIDE.md  Payload CMS patterns
+    │   ├── TESTING.md               Testing strategy
+    │   ├── RISK_REGISTER.md         Risk tracking
+    │   └── tasks/                   TASK-XXX.md files
+    │
+    ├── functions/
+    │   └── api-gateway/             Cloud Run service template (FastAPI + deploy.ps1)
+    │
+    ├── specs/
+    │   └── TASK.md                  Task tracker template
+    │
+    ├── ui/
+    │   ├── package.json             Playwright deps
+    │   └── validate-parallel.js     6-worker parallel E2E validator
+    │
+    ├── .github/
+    │   └── workflows/               CI/CD: auto_sync.yml
+    │
+    └── web/                         ★ NEXUS FRONTEND TEMPLATE
+        ├── NEXUS_TEMPLATE_INIT.md   Complete guide: what to change per project
+        ├── .env.example             → copy to .env.local, fill in brand + keys
+        ├── brand-overrides.css.template  → copy to src/app/brand-overrides.css
+        ├── page.tsx.template        → copy to src/app/(marketing)/page.tsx
+        ├── gemini.ts.template       → copied to src/lib/gemini.ts by init.ps1
+        ├── init-web.ps1             Standalone web-only initialiser
+        ├── save-nexus-snapshot.ps1  Re-snapshot Nexus from source project
+        └── nexus-source/            ★ Complete Nexus framework (READ-ONLY copy)
+            ├── src/app/globals.css      → change --color-primary only
+            ├── src/components/blocks/   → READ-ONLY (ContentBlocks, blocks.css)
+            └── package.json, next.config.ts, tailwind.config.ts ...
 ```
 
 ---
 
-## 📖 Document Guide — What to Read When
+## 🚀 Starting a New Project (2 paths)
 
-### Starting a Brand-New Project
+### Path A — GUI (recommended for Windows)
+```
+1. Double-click: bootstrap_new_project.bat
+2. Enter project name → pick folder → done
+3. Open the new folder in Antigravity
+4. Follow: .agents/workflows/master-flow.md
+```
 
-| Step | Document                                         | What You'll Learn                                     |
-| ---- | ------------------------------------------------ | ----------------------------------------------------- |
-| 1    | [QUICK_START.md](./QUICK_START.md)               | 5-minute overview of the full stack                   |
-| 2    | [NEW_PROJECT_GUIDE.md](./NEW_PROJECT_GUIDE.md)   | Phase-by-phase setup (10 phases, every command)       |
-| 3    | [starter-kit/README.md](./starter-kit/README.md) | Copy the starter kit, run `init.ps1`, deploy in 5 min |
+### Path B — CLI
+```powershell
+# Copy starter-kit to your project location
+xcopy /E /I starter-kit\ C:\Projects\my-project\
+cd C:\Projects\my-project
 
-### Understanding Authentication
-
-| Need                   | Document                       | Section         |
-| ---------------------- | ------------------------------ | --------------- |
-| Full auth overview     | [AUTH_FLOW.md](./AUTH_FLOW.md) | All 11 sections |
-| GCP / Firebase auth    | [AUTH_FLOW.md](./AUTH_FLOW.md) | Sections 1 & 2  |
-| GitHub PAT setup       | [AUTH_FLOW.md](./AUTH_FLOW.md) | Section 3.3     |
-| Lovable OAuth          | [AUTH_FLOW.md](./AUTH_FLOW.md) | Section 4       |
-| MCP server auth        | [AUTH_FLOW.md](./AUTH_FLOW.md) | Section 5       |
-| Token renewal schedule | [AUTH_FLOW.md](./AUTH_FLOW.md) | Section 10      |
-| Troubleshooting auth   | [AUTH_FLOW.md](./AUTH_FLOW.md) | Section 11      |
-
-### Working on the UI
-
-| Need              | Document                                             | Section        |
-| ----------------- | ---------------------------------------------------- | -------------- |
-| Code architecture | [UI_PROJECT_REFERENCE.md](./UI_PROJECT_REFERENCE.md) | Sections 5 & 6 |
-| Styling / theme   | [UI_PROJECT_REFERENCE.md](./UI_PROJECT_REFERENCE.md) | Section 8      |
-| Backend APIs      | [UI_PROJECT_REFERENCE.md](./UI_PROJECT_REFERENCE.md) | Section 9      |
-| Build & deploy    | [UI_PROJECT_REFERENCE.md](./UI_PROJECT_REFERENCE.md) | Section 11     |
-| E2E testing       | [UI_PROJECT_REFERENCE.md](./UI_PROJECT_REFERENCE.md) | Section 12     |
-| Troubleshooting   | [UI_PROJECT_REFERENCE.md](./UI_PROJECT_REFERENCE.md) | Section 17     |
-
-### Design Workflow (Lovable ↔ Antigravity ↔ Stitch)
-
-| Need                                | Document / File                                          |
-| ----------------------------------- | -------------------------------------------------------- |
-| How the full flow works             | [README.md](./README.md)                                 |
-| Google Stitch UI design + MCP       | [STITCH_DESIGN.md](./STITCH_DESIGN.md)                   |
-| DESIGN.md template                  | [starter-kit/docs/DESIGN.md](./starter-kit/docs/DESIGN.md) |
-| Lovable → repo sync script          | [scripts/sync_lovable.ps1](./scripts/sync_lovable.ps1)   |
-| GitHub → local auto-sync            | [scripts/auto-sync.ps1](./scripts/auto-sync.ps1)         |
-| Lovable sync workflow (Antigravity) | [workflows/lovable-sync.md](./workflows/lovable-sync.md) |
-| GitHub sync workflow (Antigravity)  | [workflows/github-sync.md](./workflows/github-sync.md)   |
-
-### Async Cloud Agent (Jules)
-
-| Need                      | Document                                               |
-| ------------------------- | ------------------------------------------------------ |
-| What is Jules?            | [JULES_INTEGRATION.md](./JULES_INTEGRATION.md)         |
-| CLI installation & usage  | [JULES_INTEGRATION.md](./JULES_INTEGRATION.md) §2-3    |
-| REST API (v1alpha)        | [JULES_INTEGRATION.md](./JULES_INTEGRATION.md) §4      |
-| Session state machine     | [JULES_INTEGRATION.md](./JULES_INTEGRATION.md) §5      |
-| Advanced workflows        | [JULES_INTEGRATION.md](./JULES_INTEGRATION.md) §6      |
-
-### Deployment (Firebase + Vercel)
-
-| Need                      | Document                                               |
-| ------------------------- | ------------------------------------------------------ |
-| Firebase Hosting deploy   | [README.md](./README.md) §9                            |
-| Vercel alternative        | [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)         |
-| Staging branch strategy   | [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) §6      |
-| SPA routing (vercel.json) | [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) §5      |
-| OAuth redirect setup      | [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) §7      |
-
-### Configuration Reference
-
-| Config                 | File                                                                     |
-| ---------------------- | ------------------------------------------------------------------------ |
-| Firebase Hosting       | [configs/firebase.json.reference](./configs/firebase.json.reference)     |
-| Firebase project alias | [configs/firebaserc.reference](./configs/firebaserc.reference)           |
-| MCP servers (all)      | [configs/mcp_config.json.reference](./configs/mcp_config.json.reference) |
+# Run initialiser
+.\init.ps1 -ProjectName "My Company" -BrandColor "#E8A020" -ProjectId "my-project-id"
+```
 
 ---
 
-## 🔗 Cross-References
+## 🤖 Key AI Keys (pre-configured)
 
-These files live elsewhere in the repo but are documented here:
-
-| File                         | Location                   | Purpose                       |
-| ---------------------------- | -------------------------- | ----------------------------- |
-| Admin Dashboard              | `web/app/page.tsx`         | Main UI (1164 lines, 8 tabs)  |
-| Search Page                  | `web/app/search/page.tsx`  | Hybrid + GraphRAG search      |
-| 404 Page                     | `web/app/not-found.tsx`    | Branded error page            |
-| Global CSS                   | `web/app/globals.css`      | Animations, scrollbar, theme  |
-| Layout                       | `web/app/layout.tsx`       | Root layout, fonts, SEO       |
-| Playwright validator         | `ui/validate-parallel.js`  | 6-worker parallel E2E tests   |
-| Auto-sync (live)             | `scripts/auto-sync.ps1`    | Background GitHub sync daemon |
-| Lovable sync (live)          | `scripts/sync_lovable.ps1` | Lovable → repo bridge         |
-| Firebase config (live)       | `firebase.json`            | Active hosting config         |
-| MCP config (live)            | `mcp_config.json`          | Active MCP server config      |
-| Antigravity workflows (live) | `.agents/workflows/`       | Active IDE workflows          |
-| Task tracker                 | `docs/tasks/TASK-001.md`   | Active task list              |
-| Deploy log                   | `docs/deployments.md`      | Deployment history            |
-| Current status               | `docs/CURRENT_STATUS.md`   | Platform status               |
+| Service | Key location | Status |
+|---------|-------------|--------|
+| Google AI Studio (Gemini) | `.env.local` → `GOOGLE_AI_API_KEY` | ✅ Configured |
+| Jules | `.env.local` → `JULES_API_KEY` | Fill in from jules.google.com |
+| Perplexity | Antigravity MCP config | ✅ Configured |
+| Google Stitch | Antigravity MCP config | ✅ Configured |
 
 ---
 
-## 📊 Stats
+## 📖 What to Read When
 
-| Metric                 | Value                                                                |
-| ---------------------- | -------------------------------------------------------------------- |
-| Total documentation    | ~200 KB across 8 docs                                                |
-| Starter kit files      | 20 files, copy-and-go                                                |
-| Scripts                | 2 PowerShell automation scripts                                      |
-| Workflows              | 2 Antigravity workflows                                              |
-| Config references      | 3 reference configs (10 MCP servers)                                 |
-| Phases in setup guide  | 10 phases, 40+ steps                                                 |
-| Auth platforms covered | 6 (GCP, Firebase, GitHub, Lovable, Antigravity, Cloud Run)           |
-| Platforms documented   | 9 (+ Jules, Vercel, Google Stitch)                                   |
+| Need | Document |
+|------|----------|
+| Starting a new project | `PROMPT_TO_PORTAL.md` → then `starter-kit/init.ps1` |
+| Understanding the full flow | `.agents/workflows/master-flow.md` |
+| **Jules** — setup + task prompts | `starter-kit/docs/JULES_INTEGRATION.md` |
+| **Jules** — sending tasks | `.agents/workflows/jules-dispatch.md` |
+| **Jules** — after PR lands | `.agents/workflows/jules-handoff.md` |
+| **Stitch** — UI design | `starter-kit/docs/STITCH_INTEGRATION.md` |
+| **Lovable** — building UI | `starter-kit/docs/LOVABLE_INTEGRATION.md` |
+| **GitHub** — setup + daily flow | `starter-kit/docs/GITHUB_INTEGRATION.md` |
+| Google AI Studio / Gemini | `GOOGLE_AI_STUDIO.md` |
+| Before deploying | `.agents/workflows/verify-pyramid.md` |
+| Deploying | `.agents/workflows/deploy-changed.md` |
+| Authentication setup | `AUTH_FLOW.md` |
+| Nexus web template | `starter-kit/web/NEXUS_TEMPLATE_INIT.md` |
+| Design system tokens | `starter-kit/docs/DESIGN.md` |
+
+---
+
+## 🔧 Per-Project Files to Change (nothing else)
+
+| File | Change |
+|------|--------|
+| `.env.local` | Site name, brand color, phone, email, project IDs |
+| `web/src/app/(marketing)/page.tsx` | Content blocks — replace all `<<PLACEHOLDER>>` |
+| `web/src/app/globals.css` | `--color-primary` value only |
+| `web/src/app/brand-overrides.css` | Hex values to match brand color |
+| `docs/PROJECT_SPEC.md` | Purpose, architecture, data model |
+| `docs/DESIGN.md` | Brand colors, fonts |
+| `public/` | hero.png, team.png, service images |
+
+**Everything in `web/nexus-source/`, `components/blocks/`, `components/ui/`, `components/cinematic/` → READ-ONLY.**
+
+---
+
+## 📊 Template Stats
+
+| Metric | Value |
+|--------|-------|
+| Documentation | ~250 KB across 12 docs |
+| Workflows | 5 complete Antigravity workflows |
+| Starter-kit files | 35+ files, copy-and-go |
+| Init steps | 11 automated steps |
+| Stack platforms | 7 (Nexus, Gemini, Jules, Firebase, Stitch, Antigravity, GitHub) |
+| Time to first deploy | < 2 hours |

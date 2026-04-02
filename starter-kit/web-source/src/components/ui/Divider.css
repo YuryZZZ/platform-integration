@@ -1,0 +1,58 @@
+﻿.divider {
+  border-color: #e5e7eb;
+}
+
+.divider--horizontal {
+  width: 100%;
+  border-top-width: 1px;
+}
+
+.divider--vertical {
+  height: 100%;
+  border-left-width: 1px;
+  display: inline-block;
+}
+
+.divider--solid {
+  border-style: solid;
+}
+
+.divider--dashed {
+  border-style: dashed;
+}
+
+.divider--dotted {
+  border-style: dotted;
+}
+
+.divider--sm {
+  margin: 0.5rem 0;
+}
+
+.divider--md {
+  margin: 1rem 0;
+}
+
+.divider--lg {
+  margin: 1.5rem 0;
+}
+
+.divider--with-label {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  border-top: none;
+}
+
+.divider--with-label::before,
+.divider--with-label::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid #e5e7eb;
+}
+
+.divider__label {
+  padding: 0 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}

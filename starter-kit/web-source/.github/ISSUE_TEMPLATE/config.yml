@@ -1,0 +1,11 @@
+﻿blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/yuryz/Design#readme
+    about: Check the documentation for usage examples and API reference
+  - name: Discussions
+    url: https://github.com/yuryz/Design/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: Security Vulnerability
+    url: https://github.com/yuryz/Design/security/policy
+    about: Report security vulnerabilities responsibly

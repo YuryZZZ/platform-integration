@@ -1,0 +1,140 @@
+﻿.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.25;
+  color: #374151;
+}
+
+.switch--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.switch--sm {
+  font-size: 12px;
+}
+
+.switch--md {
+  font-size: 14px;
+}
+
+.switch--lg {
+  font-size: 16px;
+}
+
+.switch__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.switch__track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switch--sm .switch__track {
+  width: 2rem;
+  height: 1rem;
+}
+
+.switch--md .switch__track {
+  width: 2.5rem;
+  height: 1.25rem;
+}
+
+.switch--lg .switch__track {
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.switch__thumb {
+  position: absolute;
+  background-color: white;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switch--sm .switch__thumb {
+  width: 0.75rem;
+  height: 0.75rem;
+  left: 0.125rem;
+  transform: translateX(0);
+}
+
+.switch--sm.switch--checked .switch__thumb {
+  transform: translateX(1rem);
+}
+
+.switch--md .switch__thumb {
+  width: 1rem;
+  height: 1rem;
+  left: 0.125rem;
+  transform: translateX(0);
+}
+
+.switch--md.switch--checked .switch__thumb {
+  transform: translateX(1.25rem);
+}
+
+.switch--lg .switch__thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  left: 0.125rem;
+  transform: translateX(0);
+}
+
+.switch--lg.switch--checked .switch__thumb {
+  transform: translateX(1.5rem);
+}
+
+.switch--checked .switch__track {
+  background-color: #3b82f6;
+}
+
+.switch--disabled .switch__track {
+  background-color: #d1d5db;
+}
+
+.switch--disabled.switch--checked .switch__track {
+  background-color: #93c5fd;
+}
+
+.switch__label {
+  font-weight: 500;
+}
+
+.switch--sm .switch__label {
+  font-size: 0.875rem;
+}
+
+.switch--md .switch__label {
+  font-size: 1rem;
+}
+
+.switch--lg .switch__label {
+  font-size: 1.125rem;
+}
+
+.switch:focus-within .switch__track {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.switch--disabled:focus-within .switch__track {
+  outline: 2px solid #d1d5db;
+}

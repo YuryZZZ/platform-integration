@@ -1,0 +1,31 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Nexus AI Logomark -->
+  <!-- A futuristic geometric form combining a portal and a nexus point -->
+  <rect width="64" height="64" rx="16" fill="#0A0A0A" />
+  
+  <!-- Outer Glow Ring -->
+  <circle cx="32" cy="32" r="20" stroke="url(#paint0_linear)" stroke-width="2" opacity="0.8" />
+  
+  <!-- Inner Core Structure -->
+  <path d="M32 16L46 24V40L32 48L18 40V24L32 16Z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+  
+  <!-- Connecting Lines -->
+  <path d="M32 16V32M18 24L32 32M46 24L32 32M18 40L32 32M46 40L32 32M32 48V32" stroke="white" stroke-opacity="0.5" stroke-width="1.5" stroke-linejoin="round"/>
+  
+  <!-- Energy Nodes -->
+  <circle cx="32" cy="32" r="3" fill="#3B82F6" />
+  <circle cx="32" cy="16" r="2" fill="white" />
+  <circle cx="46" cy="24" r="2" fill="white" />
+  <circle cx="46" cy="40" r="2" fill="white" />
+  <circle cx="32" cy="48" r="2" fill="white" />
+  <circle cx="18" cy="40" r="2" fill="white" />
+  <circle cx="18" cy="24" r="2" fill="white" />
+
+  <defs>
+    <linearGradient id="paint0_linear" x1="12" y1="12" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6" />
+      <stop offset="0.5" stop-color="#8B5CF6" />
+      <stop offset="1" stop-color="#EC4899" />
+    </linearGradient>
+  </defs>
+</svg>

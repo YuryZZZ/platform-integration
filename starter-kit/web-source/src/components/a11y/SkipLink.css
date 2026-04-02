@@ -1,0 +1,28 @@
+﻿/**
+ * SkipLink Styles
+ * WCAG 2.1 AA compliant skip navigation
+ */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary-600, #0284c7);
+  color: white;
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  transition: top 0.2s ease;
+  font-weight: 500;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--color-primary-400, #38bdf8);
+  outline-offset: 2px;
+}
+
+.skip-link:hover {
+  background: var(--color-primary-700, #0369a1);
+}
