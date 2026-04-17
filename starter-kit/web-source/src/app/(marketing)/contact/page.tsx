@@ -1,240 +1,116 @@
-'use client';
+import type { Metadata } from 'next';
+import React from 'react';
+import { Mail, Phone, MapPin, Clock, Shield, CheckCircle2 } from 'lucide-react';
+import { Section } from '@/components/layout/Section';
+import ContactForm from './ContactForm';
 
-import React, { useState } from 'react';
-import { z } from 'zod';
-import { useZodForm } from '@/hooks/useZodForm';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+export const metadata: Metadata = {
+  title: 'Contact Us',
+  description: 'Have questions about Nexus AI? Our team is here to help you build the future.',
+};
 
-const contactSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
-  subject: z.string().min(3, 'Subject must be at least 3 characters'),
-  message: z.string().min(10, 'Message must be at least 10 characters'),
-});
+const valueProps = [
+  {
+    icon: Shield,
+    title: 'Enterprise-ready',
+    desc: 'Dedicated support for large-scale deployments and compliance.',
+  },
+  {
+    icon: CheckCircle2,
+    title: 'Expert Guidance',
+    desc: 'Work with our AI architects to design your perfect workflow.',
+  },
+];
+
+const contactInfo = [
+  {
+    icon: Mail,
+    title: 'Email',
+    text: 'hello@nexus-ai.com',
+    href: 'mailto:hello@nexus-ai.com',
+  },
+  {
+    icon: Phone,
+    title: 'Phone',
+    text: '+1 (555) 123-4567',
+    href: 'tel:+15551234567',
+  },
+  {
+    icon: MapPin,
+    title: 'Office',
+    text: '123 Innovation Way, San Francisco, CA',
+    href: '#',
+  },
+  {
+    icon: Clock,
+    title: 'Response Time',
+    text: 'Under 24 hours',
+    href: '#',
+  },
+];
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
-
-  const form = useZodForm(contactSchema, {
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-
-  const handleSend = form.submit(async (data) => {
-    // Simulate a brief delay for user feedback
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    setSubmitted(true);
-    // Form will auto-reset by calling form.reset() in the success state
-  });
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: 'Email',
-      text: 'hello@nexus-ai.com',
-      href: 'mailto:hello@nexus-ai.com',
-    },
-    {
-      icon: Phone,
-      title: 'Phone',
-      text: '+44 (0) 20 1234 5678',
-      href: 'tel:+442012345678',
-    },
-    {
-      icon: MapPin,
-      title: 'Office',
-      text: 'London, United Kingdom',
-      href: '#',
-    },
-    {
-      icon: Clock,
-      title: 'Response Time',
-      text: 'Within 24 hours',
-      href: '#',
-    },
-  ];
-
   return (
-    <>
+    <main>
       {/* Hero Section */}
-      <section className="relative pt-16 pb-12 sm:pt-24 sm:pb-16 text-center overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[600px] h-[300px] rounded-full bg-[radial-gradient(ellipse,_var(--color-primary)_0%,_transparent_70%)] opacity-5 blur-[40px]" />
-        </div>
-
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-            Get In{' '}
-            <span className="bg-clip-text text-transparent bg-[linear-gradient(135deg,_var(--color-primary-light),_var(--color-primary))]">
-              Touch
-            </span>
-          </h1>
-          <p className="text-lg text-[var(--color-text-secondary)] max-w-lg mx-auto">
-            Questions about Nexus AI? Want a demo? We&apos;d love to hear from you.
-          </p>
-        </div>
+      <section className="py-24 px-4 text-center">
+        <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-6">
+          Get in <span className="text-gradient">touch</span>
+        </h1>
+        <p className="text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
+          Whether you&apos;re looking for a custom demo, have technical questions, or just want to say hi — we&apos;re all ears.
+        </p>
       </section>
 
-      {/* Content Section */}
-      <section className="container-page pb-16 sm:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* Left: Contact Form */}
-          <div className="lg:col-span-2">
-            {submitted ? (
-              <div className="card flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-16 h-16 rounded-full mb-6 flex items-center justify-center text-2xl bg-[var(--color-success)]">
-                  ✓
-                </div>
-                <h2 className="text-2xl font-bold mb-2 text-[var(--color-text)]">
-                  Message Sent!
-                </h2>
-                <p className="text-[var(--color-text-secondary)] mb-8">
-                  Thanks for reaching out. We&apos;ll be in touch within 24 hours.
-                </p>
-                <button
-                  onClick={() => {
-                    setSubmitted(false);
-                    form.reset();
-                  }}
-                  className="btn border-[var(--color-border)] text-[var(--color-text)]"
-                >
-                  Send Another Message
-                </button>
+      <Section variant="default" padding="lg">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          {/* Left Side: Value Props & Info */}
+          <div>
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold mb-8">Why talk to us?</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                {valueProps.map((prop, i) => (
+                  <div key={i} className="flex gap-4 p-6 bg-[var(--color-bg-subtle)] rounded-2xl border border-[var(--color-border)]">
+                    <div className="p-3 bg-[var(--color-primary)] bg-opacity-10 rounded-xl h-fit">
+                      <prop.icon className="text-[var(--color-primary)]" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold mb-1">{prop.title}</h3>
+                      <p className="text-sm text-[var(--color-text-secondary)]">{prop.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ) : (
-              <form onSubmit={handleSend} noValidate className="card">
-                {form.globalError && (
-                  <div
-                    className="p-4 rounded-lg mb-6 border text-sm font-medium bg-[var(--color-danger)] bg-opacity-10 border-[var(--color-danger)] border-opacity-20 text-[var(--color-danger)]"
-                    role="alert"
-                  >
-                    {form.globalError}
-                  </div>
-                )}
+            </div>
 
-                {/* Name Field */}
-                <div className="mb-6">
-                  <label
-                    htmlFor="contact-name"
-                    className="block text-sm font-semibold mb-2 text-[var(--color-text-secondary)]"
-                  >
-                    Name
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    placeholder="Your full name"
-                    className={`form-input ${form.fieldError('name') ? 'form-input--error' : ''}`}
-                    {...form.register('name')}
-                  />
-                  {form.fieldError('name') && (
-                    <p className="form-error">{form.fieldError('name')}</p>
-                  )}
-                </div>
-
-                {/* Email Field */}
-                <div className="mb-6">
-                  <label
-                    htmlFor="contact-email"
-                    className="block text-sm font-semibold mb-2 text-[var(--color-text-secondary)]"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    placeholder="you@company.com"
-                    className={`form-input ${form.fieldError('email') ? 'form-input--error' : ''}`}
-                    {...form.register('email')}
-                  />
-                  {form.fieldError('email') && (
-                    <p className="form-error">{form.fieldError('email')}</p>
-                  )}
-                </div>
-
-                {/* Subject Field */}
-                <div className="mb-6">
-                  <label
-                    htmlFor="contact-subject"
-                    className="block text-sm font-semibold mb-2 text-[var(--color-text-secondary)]"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    id="contact-subject"
-                    type="text"
-                    placeholder="What is this about?"
-                    className={`form-input ${form.fieldError('subject') ? 'form-input--error' : ''}`}
-                    {...form.register('subject')}
-                  />
-                  {form.fieldError('subject') && (
-                    <p className="form-error">{form.fieldError('subject')}</p>
-                  )}
-                </div>
-
-                {/* Message Field */}
-                <div className="mb-8">
-                  <label
-                    htmlFor="contact-message"
-                    className="block text-sm font-semibold mb-2 text-[var(--color-text-secondary)]"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="contact-message"
-                    rows={6}
-                    placeholder="Tell us about your project..."
-                    className={`form-input resize-none ${form.fieldError('message') ? 'form-input--error' : ''}`}
-                    {...form.register('message')}
-                  />
-                  {form.fieldError('message') && (
-                    <p className="form-error">{form.fieldError('message')}</p>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={form.isSubmitting}
-                  className="btn btn-primary w-full"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {contactInfo.map((info, i) => (
+                <a
+                  key={i}
+                  href={info.href}
+                  className="p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl hover:border-[var(--color-primary)] transition-colors group"
                 >
-                  {form.isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
-            )}
+                  <info.icon className="text-[var(--color-text-muted)] group-hover:text-[var(--color-primary)] mb-4 transition-colors" size={20} />
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)] mb-1">{info.title}</h4>
+                  <p className="font-medium text-[var(--color-text)]">{info.text}</p>
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Right: Contact Info Cards */}
-          <div className="space-y-4">
-            {contactInfo.map((info) => {
-              const Icon = info.icon;
-              return (
-                <a
-                  key={info.title}
-                  href={info.href}
-                  className="card block group hover:border-[var(--color-primary)] transition-colors duration-200"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-lg flex-shrink-0 bg-[var(--color-bg-subtle)]">
-                      <Icon size={20} className="text-[var(--color-primary)]" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-sm font-semibold mb-1 text-[var(--color-text)]">
-                        {info.title}
-                      </h3>
-                      <p className="text-sm break-all text-[var(--color-text-secondary)]">
-                        {info.text}
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              );
-            })}
+          {/* Right Side: Form */}
+          <div className="bg-[var(--color-surface)] p-8 sm:p-10 rounded-3xl border border-[var(--color-border)] shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-primary)] opacity-5 blur-3xl -mr-16 -mt-16" />
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold mb-2">Send a message</h3>
+              <p className="text-[var(--color-text-secondary)] mb-8">
+                Fill out the form below and we&apos;ll get back to you shortly.
+              </p>
+              <ContactForm />
+            </div>
           </div>
         </div>
-      </section>
-    </>
+      </Section>
+    </main>
   );
 }

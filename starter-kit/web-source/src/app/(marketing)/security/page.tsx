@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import React from 'react';
 import {
   Shield,
@@ -11,7 +12,43 @@ import {
   AlertTriangle,
   Check,
   ArrowRight,
+  Download,
+  Server
 } from 'lucide-react';
+import { Section } from '@/components/layout/Section';
+import { ContentGrid } from '@/components/layout/ContentGrid';
+
+export const metadata: Metadata = {
+  title: 'Security & Trust',
+  description: 'Enterprise-grade security, compliance, and data protection at the core of Nexus AI.',
+};
+
+const complianceSections = [
+  {
+    icon: Globe,
+    title: 'GDPR Compliance',
+    description: 'Full compliance with EU data protection regulations. We provide automated data deletion, right to be forgotten, and data portability tools.',
+    status: 'Compliant'
+  },
+  {
+    icon: FileCheck,
+    title: 'SOC 2 Type II',
+    description: 'Independently audited security controls ensuring your data is handled with the highest standards of availability and confidentiality.',
+    status: 'Compliant'
+  },
+  {
+    icon: Lock,
+    title: 'End-to-End Encryption',
+    description: 'All data is encrypted at rest using AES-256 and in transit using TLS 1.3. Your keys, your data, absolute privacy.',
+    status: 'Compliant'
+  },
+  {
+    icon: UserCheck,
+    title: 'Granular Access Control',
+    description: 'Row-level security (RLS) and advanced RBAC ensure that users only see the data they are authorized to access.',
+    status: 'In Progress'
+  }
+];
 
 const securityPillars = [
   {
@@ -72,10 +109,9 @@ const practices = [
 
 export default function SecurityPage() {
   return (
-    <>
+    <main>
       {/* Hero Section */}
       <section className="relative py-32 sm:py-40 px-4 text-center overflow-hidden">
-        {/* Background Gradient */}
         <div
           className="absolute inset-0 opacity-40 pointer-events-none"
           style={{
@@ -86,7 +122,6 @@ export default function SecurityPage() {
         />
 
         <div className="relative max-w-3xl mx-auto">
-          {/* Certification Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-xs font-semibold uppercase tracking-wider text-[var(--color-success)] bg-[var(--color-success)] bg-opacity-10 rounded-full">
             <Shield className="w-3.5 h-3.5" />
             SOC 2 Type II Certified
@@ -95,15 +130,55 @@ export default function SecurityPage() {
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-4 leading-tight">
             Security you can <span className="text-gradient">trust</span>
           </h1>
-          <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-2xl mx-auto mb-10">
             Enterprise-grade security is not an add-on — it&apos;s built into every layer of Nexus AI, from database isolation to AI prompt governance.
           </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/security-brief.pdf" className="btn btn-primary flex items-center gap-2">
+              <Download size={18} />
+              Download Security Brief
+            </a>
+            <a href="/contact" className="btn border border-[var(--color-border)] hover:bg-[var(--color-bg-subtle)]">
+              Contact Trust Team
+            </a>
+          </div>
         </div>
       </section>
 
+      {/* Compliance Sections */}
+      <Section variant="default" padding="lg">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Compliance & Standards</h2>
+          <p className="text-[var(--color-text-secondary)]">How we protect your data and stay compliant with global standards.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {complianceSections.map((item, i) => (
+            <div key={i} className="p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl flex flex-col">
+              <div className="flex items-start justify-between mb-6">
+                <div className="p-3 bg-[var(--color-primary)] bg-opacity-10 rounded-xl">
+                  <item.icon className="text-[var(--color-primary)]" size={24} />
+                </div>
+                <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                  item.status === 'Compliant'
+                    ? 'bg-[var(--color-success)] bg-opacity-10 text-[var(--color-success)]'
+                    : 'bg-amber-500 bg-opacity-10 text-amber-500'
+                }`}>
+                  {item.status}
+                </span>
+              </div>
+              <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+              <p className="text-[var(--color-text-secondary)] leading-relaxed flex-1">
+                {item.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       {/* Certifications Bar */}
       <section className="py-8 px-4 bg-[var(--color-bg-subtle)]">
-        <div className="container-page">
+        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {certifications.map(cert => {
               const Icon = cert.icon;
@@ -135,101 +210,91 @@ export default function SecurityPage() {
       </section>
 
       {/* Security Pillars */}
-      <section className="section-padding bg-[var(--color-bg-subtle)]">
-        <div className="container-page">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
-              Six pillars of <span className="text-gradient">protection</span>
-            </h2>
-            <p className="text-[var(--color-text-secondary)] max-w-md mx-auto">
-              Defense in depth — every layer is hardened, monitored, and regularly tested.
-            </p>
-          </div>
-
-          {/* Pillars Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {securityPillars.map(pillar => {
-              const Icon = pillar.icon;
-              return (
-                <div
-                  key={pillar.title}
-                  className="flex flex-col gap-4 p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl hover:border-[var(--color-primary)] transition-colors"
-                >
-                  <div className={`w-11 h-11 rounded-lg flex items-center justify-center text-white ${pillar.iconColor}`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-[var(--color-text)]">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                    {pillar.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+      <Section variant="alternate" padding="xl">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
+            Six pillars of <span className="text-gradient">protection</span>
+          </h2>
+          <p className="text-[var(--color-text-secondary)] max-w-md mx-auto">
+            Defense in depth — every layer is hardened, monitored, and regularly tested.
+          </p>
         </div>
-      </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {securityPillars.map(pillar => {
+            const Icon = pillar.icon;
+            return (
+              <div
+                key={pillar.title}
+                className="flex flex-col gap-4 p-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl hover:border-[var(--color-primary)] transition-colors"
+              >
+                <div className={`w-11 h-11 rounded-lg flex items-center justify-center text-white ${pillar.iconColor}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-semibold text-[var(--color-text)]">
+                  {pillar.title}
+                </h3>
+                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                  {pillar.desc}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
 
       {/* Best Practices */}
-      <section className="section-padding">
-        <div className="container-page">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            {/* Left: Content */}
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                Security <span className="text-gradient">best practices</span>
-              </h2>
-              <p className="text-[var(--color-text-secondary)] leading-relaxed mb-6">
-                We follow industry best practices and regularly update our security posture based on threat intelligence and compliance requirements.
-              </p>
-              <a
-                href="/demo"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] hover:gap-3 transition-all"
-              >
-                Request security whitepaper
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-
-            {/* Right: Checklist */}
-            <div className="space-y-3">
-              {practices.map(practice => (
-                <div key={practice} className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[var(--color-success)] flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                    {practice}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Responsible Disclosure */}
-      <section className="section-padding bg-[var(--color-bg-subtle)]">
-        <div className="container-page">
-          <div className="flex flex-col sm:flex-row items-center gap-6 p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl">
-            <AlertTriangle className="w-10 h-10 text-amber-500 flex-shrink-0" />
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-[var(--color-text)] mb-1">
-                Responsible Disclosure
-              </h3>
-              <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                Found a vulnerability? We appreciate responsible disclosure and offer a bug bounty program for qualifying reports.
-              </p>
-            </div>
+      <Section variant="default" padding="xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              Security <span className="text-gradient">best practices</span>
+            </h2>
+            <p className="text-[var(--color-text-secondary)] leading-relaxed mb-6">
+              We follow industry best practices and regularly update our security posture based on threat intelligence and compliance requirements.
+            </p>
             <a
-              href="mailto:security@nexusai.dev"
-              className="btn btn-primary flex-shrink-0"
+              href="/demo"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] hover:gap-3 transition-all"
             >
-              Report a Vulnerability
+              Request security whitepaper
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
+
+          <div className="space-y-3">
+            {practices.map(practice => (
+              <div key={practice} className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-[var(--color-success)] flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                  {practice}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-      </section>
-    </>
+      </Section>
+
+      {/* Responsible Disclosure */}
+      <Section variant="alternate" padding="lg">
+        <div className="flex flex-col sm:flex-row items-center gap-6 p-8 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl">
+          <AlertTriangle className="w-10 h-10 text-amber-500 flex-shrink-0" />
+          <div className="flex-1 text-center sm:text-left">
+            <h3 className="text-lg font-bold text-[var(--color-text)] mb-1">
+              Responsible Disclosure
+            </h3>
+            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              Found a vulnerability? We appreciate responsible disclosure and offer a bug bounty program for qualifying reports.
+            </p>
+          </div>
+          <a
+            href="mailto:security@nexusai.dev"
+            className="btn btn-primary flex-shrink-0"
+          >
+            Report a Vulnerability
+          </a>
+        </div>
+      </Section>
+    </main>
   );
 }
