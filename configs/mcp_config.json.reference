@@ -92,6 +92,15 @@
       "env": {
         "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY"
       }
+    },
+    "github": {
+      "command": "C:\\Users\\YOUR_USER\\.gemini\\antigravity\\mcp_servers\\github-mcp-server\\github-mcp-server.exe",
+      "args": [
+        "stdio"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_PAT"
+      }
     }
   }
 }
