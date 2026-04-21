@@ -49,6 +49,7 @@ starter-kit/
 |-- init.ps1
 |-- firebase.json
 |-- .firebaserc
+|-- .env.example
 |-- .github/workflows/
 |-- .agents/workflows/
 |-- docs/
@@ -74,4 +75,4 @@ Output is written to `ui/screenshots/` plus `validation_report.json`.
 ## Full Guides
 
 - Generated project reference: `reference/INDEX.md`
-- Full walkthrough: `../NEW_PROJECT_GUIDE.md`
+- Full walkthrough: `reference/NEW_PROJECT_GUIDE.md`
