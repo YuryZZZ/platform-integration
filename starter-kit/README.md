@@ -1,82 +1,77 @@
-# Starter Kit — Quick Start
+# Starter Kit - Quick Start
 
-> **Copy this folder to start a new project in < 5 minutes.**
+> Copy this folder to start a new project in under 5 minutes.
 
-## Usage
+## Fastest Path
+
+If you have the full `platform-integration` repo on disk, run `start.bat` from the repo root. It copies this starter kit, adds the reference docs, and prepares a clean project folder automatically.
+
+## Manual Usage
 
 ```powershell
 # 1. Copy this folder to your new project location
-Copy-Item -Recurse docs/platform-integration/starter-kit C:\Projects\my-new-project
+Copy-Item -Recurse .\starter-kit C:\Projects\my-new-project
 
 # 2. Go there
 cd C:\Projects\my-new-project
 
-# 3. Run the initializer (fills in all placeholders, creates GCP project, enables APIs)
+# 3. Run the initializer
 .\init.ps1
 
-# 4. Install frontend
-cd web && npx -y create-next-app@latest ./ --typescript --eslint --app --src-dir=false --import-alias="@/*" --use-npm --yes && cd ..
+# 4. Install frontend if the template has not already been materialised
+cd web
+npx -y create-next-app@latest ./ --typescript --eslint --app --src-dir=false --import-alias="@/*" --use-npm --yes
+cd ..
 
-# 5. Configure static export
-# Edit web/next.config.ts: add output: "export"
+# 5. Build and deploy
+cd web
+npm run build
+cd ..
+npx firebase-tools deploy --only hosting --project YOUR_PROJECT_ID
 
-# 6. Build & deploy
-cd web && npm run build && cd ..
-npx firebase-tools deploy --only hosting
+# 6. Install the validator
+cd ui
+npm install
+npx playwright install chromium
+node validate-parallel.js --url https://YOUR_PROJECT_ID.web.app
+cd ..
 
-# 7. Install test runner
-cd ui && npm install && npx playwright install chromium && cd ..
-
-# 8. Validate all pages in parallel
-cd ui && node validate-parallel.js --url https://YOUR_PROJECT_ID.web.app
-
-# 9. Push to GitHub
-git add -A && git commit -m "feat: initial project" && git push -u origin master
+# 7. Push to GitHub
+git add -A
+git commit -m "feat: initial project"
+git push -u origin master
 ```
 
 ## What's Inside
 
-```
+```text
 starter-kit/
-├── init.ps1                          # One-click project initializer
-├── firebase.json                     # Firebase Hosting config
-├── .firebaserc                       # Firebase project alias
-├── .github/workflows/deploy.yml      # CI/CD pipeline
-├── .agents/workflows/deploy-changed.md  # Antigravity workflow
-├── docs/
-│   ├── PROJECT_SPEC.md               # Spec template
-│   ├── CURRENT_STATUS.md             # Status template
-│   └── deployments.md                # Deploy log
-├── specs/TASK.md                     # Task tracker
-├── functions/api-gateway/            # Backend template
-│   ├── main.py                       # FastAPI app
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   └── deploy.ps1                    # Cloud Run deploy script
-├── ui/
-│   ├── package.json                  # Test runner config
-│   └── validate-parallel.js          # PARALLEL page validator (6 workers)
-├── web/                              # Frontend (run create-next-app here)
-└── scripts/                          # Data pipeline scripts
+|-- init.ps1
+|-- firebase.json
+|-- .firebaserc
+|-- .github/workflows/
+|-- .agents/workflows/
+|-- docs/
+|-- specs/TASK.md
+|-- functions/api-gateway/
+|-- ui/
+|-- web/
+`-- scripts/
 ```
 
 ## Parallel Validator
 
-The `ui/validate-parallel.js` runs ALL pages simultaneously:
+The `ui/validate-parallel.js` script validates all defined routes in parallel.
 
 ```powershell
-# Validate with 6 parallel browsers (default)
 node validate-parallel.js --url https://mysite.web.app
-
-# Use more workers for more pages
 node validate-parallel.js --url https://mysite.web.app --workers 10
-
-# Debug mode (shows browsers)
 node validate-parallel.js --url https://mysite.web.app --headed
 ```
 
-Output: screenshots in `ui/screenshots/` + `validation_report.json`
+Output is written to `ui/screenshots/` plus `validation_report.json`.
 
-## Full Guide
+## Full Guides
 
-See [NEW_PROJECT_GUIDE.md](../NEW_PROJECT_GUIDE.md) for the detailed A-to-Z walkthrough.
+- Root reference: `reference/PORTABLE_FRAMEWORK_TEMPLATE.md`
+- Full walkthrough: `../NEW_PROJECT_GUIDE.md`
