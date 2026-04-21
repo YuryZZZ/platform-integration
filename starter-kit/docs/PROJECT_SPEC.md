@@ -1,4 +1,4 @@
-# YOUR_PROJECT_NAME — Project Spec
+# YOUR_PROJECT_NAME - Project Spec
 
 > **This is the spec. No drift allowed.**
 > Changes to purpose, domain, architecture, public contracts, or data model require
@@ -30,36 +30,36 @@ providing hybrid search, evidence assembly, and AI-powered document analysis._
 
 ### Platform Stack
 
-| Layer          | Technology            | Purpose                    |
+| Layer | Technology | Purpose |
 | -------------- | --------------------- | -------------------------- |
-| **Frontend**   | Next.js + Nexus       | Block-based marketing + platform |
-| **Styling**    | Tailwind CSS          | Utility-first CSS          |
-| **Backend**    | Cloud Functions / Run | Serverless microservices   |
-| **Database**   | Firestore / BigQuery  | Real-time / analytics data |
-| **Hosting**    | Firebase App Hosting  | Auto-provisioned Cloud Run + CDN |
-| **Auth**       | Firebase Auth         | User authentication        |
-| **AI**         | Google AI Studio (Gemini) | `GOOGLE_AI_API_KEY` → `src/lib/gemini.ts` |
-| **Design**     | Google Stitch         | AI UI design               |
-| **IDE**        | Antigravity           | Agent-first development    |
-| **Async Agent**| Jules                 | Cloud VM tasks — SEO, tests, security |
+| **Frontend** | Next.js + chosen UI system | Marketing and product UI |
+| **Styling** | Tailwind CSS or project standard | Styling and tokens |
+| **Backend** | Cloud Functions / Cloud Run | Serverless services |
+| **Database** | Firestore / BigQuery | Runtime and analytics data |
+| **Hosting** | Firebase Hosting or App Hosting | Frontend delivery |
+| **Auth** | Firebase Auth | User authentication |
+| **AI** | Gemini, OpenAI, or project-standard model stack | Model-backed features |
+| **Design** | Stitch, Lovable, or local design system | UI generation path |
+| **IDE** | Antigravity | Agent-first development |
+| **Async Agent** | Jules or equivalent | Large async maintenance tasks |
 
 ### Project Identifiers
-<!-- FILL THESE IN after setup — Antigravity reads these to route to the right tools -->
+<!-- FILL THESE IN after setup so Antigravity and your tools can target the correct project -->
 
 | Key | Value |
 |-----|-------|
-| **Stitch Project ID** | `<!-- run: mcp_StitchMCP_list_projects to find yours -->` |
-| **Firebase Project ID** | `<!-- e.g. my-project-12345 -->` |
-| **GitHub Repo** | `<!-- e.g. YuryZZZ/my-new-project -->` |
-| **Production URL** | `<!-- e.g. https://my-project.web.app -->` |
+| **Stitch Project ID** | `<!-- optional -->` |
+| **Firebase Project ID** | `YOUR_PROJECT_ID` |
+| **GitHub Repo** | `YOUR_GITHUB_OWNER/YOUR_REPO` |
+| **Production URL** | `https://YOUR_PROJECT_ID.web.app` |
 | **Dev URL** | `http://localhost:3000` |
 
 ### Deploy Units
 
 ```
 functions/
-├── api-gateway/      → Cloud Run (YOUR_REGION)
-├── my-service/       → Cloud Run (YOUR_REGION)
+├── api-gateway/      -> Cloud Run (YOUR_REGION)
+├── my-service/       -> Cloud Run (YOUR_REGION)
 └── ...
 ```
 
@@ -69,9 +69,9 @@ Each function has its own `deploy.ps1`. **Never deploy repo root.**
 
 <!-- FILL THIS IN: Key collections/tables and their purpose. -->
 
-| Collection/Table | Purpose              | Schema Link |
-| ---------------- | -------------------- | ----------- |
-|                  |                      |             |
+| Collection/Table | Purpose | Schema Link |
+| ---------------- | ------- | ----------- |
+|                  |         |             |
 
 ---
 
@@ -81,8 +81,8 @@ Each function has its own `deploy.ps1`. **Never deploy repo root.**
 
 | Layer | Database | Purpose | Access Pattern |
 |-------|----------|---------|----------------|
-| **Layer 1 — Control Plane** | PostgreSQL 16 | Internal platform data (prompts, tenants, audit logs, embeddings) | Payload Local API (server-only) |
-| **Layer 2 — Generated Site Runtime** | Firebase (Firestore, Auth, Hosting) | Per-site user data, authentication, deployment | Firebase SDK (client + server) |
+| **Layer 1 - Control Plane** | PostgreSQL 16 | Internal platform data (prompts, tenants, audit logs, embeddings) | Server-only API |
+| **Layer 2 - Generated Site Runtime** | Firebase (Firestore, Auth, Hosting) | Per-site user data, authentication, deployment | Firebase SDK |
 
 This boundary is hard and intentional. Architecture review required before any cross-layer data access.
 
@@ -92,9 +92,9 @@ This boundary is hard and intentional. Architecture review required before any c
 
 <!-- FILL THIS IN: The endpoints that external systems depend on. -->
 
-| Endpoint                 | Method | Purpose              | Breaking change? |
+| Endpoint | Method | Purpose | Breaking change? |
 | ------------------------ | ------ | -------------------- | ---------------- |
-| `/health`                | GET    | Service health check | Never change     |
+| `/health` | GET | Service health check | Never change |
 
 ---
 
@@ -102,28 +102,28 @@ This boundary is hard and intentional. Architecture review required before any c
 
 Design tokens are defined in `DESIGN.md` (see [docs/DESIGN.md](./DESIGN.md)).
 
-| Token      | Value          |
+| Token | Value |
 | ---------- | -------------- |
-| Primary    | `#6366f1`      |
-| Background | `#0f172a`      |
-| Font       | Inter          |
-| Grid       | 8px base       |
+| Primary | `TBD` |
+| Background | `TBD` |
+| Font | `TBD` |
+| Grid | `8px base` |
 
 ---
 
 ## Autonomy Levels (Reference)
 
-| Level | Scope                                    | Auto-apply? |
+| Level | Scope | Auto-apply? |
 | ----- | ---------------------------------------- | ----------- |
-| L1    | Tests, docs, logging, tiny refactors     | ✅ Yes      |
-| L2    | Changes with >60% test coverage          | ✅ Yes      |
-| L3    | Dependency changes, weak-test refactors  | ❌ Approval |
-| L4    | API changes, schema, deploys, secrets    | ❌ Approval |
+| L1 | Tests, docs, logging, tiny refactors | Yes |
+| L2 | Changes with >60% test coverage | Yes |
+| L3 | Dependency changes, weak-test refactors | Approval |
+| L4 | API changes, schema, deploys, secrets | Approval |
 
 ---
 
 ## Changelog
 
-| Date       | Change                     | Approved By |
+| Date | Change | Approved By |
 | ---------- | -------------------------- | ----------- |
-| YYYY-MM-DD | Initial spec created       | @user       |
+| YYYY-MM-DD | Initial spec created | @user |
