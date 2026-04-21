@@ -55,7 +55,7 @@ echo ========================================================
 echo.
 
 echo [1/5] Copying portable starter kit...
-xcopy "%STARTER_SRC%\*" "%ProjectPath%\" /E /H /C /I /Q >nul
+xcopy "%STARTER_SRC%\*" "%ProjectPath%\\" /E /H /C /I /Q >nul
 if errorlevel 1 (
     echo [ERROR] Failed to copy starter kit.
     pause
@@ -75,13 +75,12 @@ for %%f in (
     VERCEL_DEPLOYMENT.md
     NEW_PROJECT_GUIDE.md
     INDEX.md
-    PORTABLE_FRAMEWORK_TEMPLATE.md
 ) do (
     if exist "%SCRIPT_DIR%%%f" copy /Y "%SCRIPT_DIR%%%f" "%ProjectPath%\reference\%%f" >nul
 )
-if exist "%SCRIPT_DIR%configs" xcopy "%SCRIPT_DIR%configs\*" "%ProjectPath%\reference\configs\" /E /H /C /I /Q >nul
-if exist "%SCRIPT_DIR%scripts" xcopy "%SCRIPT_DIR%scripts\*" "%ProjectPath%\reference\scripts\" /E /H /C /I /Q >nul
-if exist "%SCRIPT_DIR%workflows" xcopy "%SCRIPT_DIR%workflows\*" "%ProjectPath%\reference\workflows\" /E /H /C /I /Q >nul
+if exist "%SCRIPT_DIR%configs" xcopy "%SCRIPT_DIR%configs\*" "%ProjectPath%\reference\configs\\" /E /H /C /I /Q >nul
+if exist "%SCRIPT_DIR%scripts" xcopy "%SCRIPT_DIR%scripts\*" "%ProjectPath%\reference\scripts\\" /E /H /C /I /Q >nul
+if exist "%SCRIPT_DIR%workflows" xcopy "%SCRIPT_DIR%workflows\*" "%ProjectPath%\reference\workflows\\" /E /H /C /I /Q >nul
 echo     [OK] reference docs copied.
 
 echo [3/5] Creating local env placeholders...
@@ -107,7 +106,7 @@ echo ========================================================
 echo   Location:  %ProjectPath%
 echo   Start here: %ProjectPath%\README.md
 echo   Then run:  .\init.ps1
-echo   Reference: %ProjectPath%\reference\PORTABLE_FRAMEWORK_TEMPLATE.md
+echo   Reference: %ProjectPath%\reference\INDEX.md
 echo ========================================================
 echo.
 echo Recommended next actions:
