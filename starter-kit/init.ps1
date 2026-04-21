@@ -3,9 +3,9 @@
 # ============================================================
 # Usage:
 #   1. Copy this entire starter-kit folder to your new project location
-#   2. Edit the variables below
-#   3. Run: .\init.ps1
-#   4. Follow the prompts
+#   2. Run: .\init.ps1
+#   3. Provide project details when prompted
+#   4. Follow the remaining setup steps
 # ============================================================
 
 param(
@@ -40,19 +40,20 @@ if ($confirm -ne "y") { Write-Host "Aborted."; exit 0 }
 Write-Host "`n[1/8] Replacing placeholders..." -ForegroundColor Green
 
 $files = Get-ChildItem -Recurse -File -Exclude "init.ps1","*.exe","*.zip" |
-    Where-Object { $_.Extension -in ".json",".md",".ps1",".ts",".js",".yml",".yaml",".py",".txt",".html",".css",".tsx",".jsx",".mjs",".cjs",".env",".rc" -or $_.Name -eq ".firebaserc" }
+    Where-Object { $_.Extension -in ".json", ".md", ".ps1", ".ts", ".js", ".yml", ".yaml", ".py", ".txt", ".html", ".css", ".tsx", ".jsx", ".mjs", ".cjs", ".env", ".rc" -or $_.Name -eq ".firebaserc" }
 
 foreach ($f in $files) {
     $content = Get-Content $f.FullName -Raw -ErrorAction SilentlyContinue
     if ($content) {
         $updated = $content `
+            -replace "YOUR_GCP_PROJECT_ID", $ProjectId `
             -replace "YOUR_PROJECT_ID", $ProjectId `
             -replace "YOUR_PROJECT_NAME", $ProjectName `
             -replace "YOUR_USER", $GitHubUser `
             -replace "YOUR_REPO", $GitHubRepo `
             -replace "YOUR_REGION", $Region
         if ($updated -ne $content) {
-            Set-Content $f.FullName $updated -NoNewline
+            Set-Content $f.FullName $updated
             Write-Host "  Updated: $($f.Name)"
         }
     }
