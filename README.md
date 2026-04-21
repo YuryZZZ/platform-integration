@@ -34,7 +34,7 @@ See also:
 - `QUICK_START.md`
 - `NEW_PROJECT_GUIDE.md`
 - `AUTH_FLOW.md`
-- `PORTABLE_FRAMEWORK_TEMPLATE.md`
+- `reference/INDEX.md` in the generated project
 
 ---
 
@@ -120,7 +120,7 @@ The framework is healthy when all of these are true:
 
 - `start.bat` can run from any folder where this repo is cloned
 - generated projects include `init.ps1`
-- generated projects include `reference/PORTABLE_FRAMEWORK_TEMPLATE.md`
+- generated projects include `reference/INDEX.md`
 - committed docs no longer depend on one live project or one machine path
 - MCP reference files use placeholders only
 - a second PC can bootstrap without editing committed framework files first
