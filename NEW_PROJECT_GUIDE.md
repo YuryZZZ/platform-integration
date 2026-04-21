@@ -225,4 +225,4 @@ Common files:
 
 ---
 
-Use `INDEX.md` and `PORTABLE_FRAMEWORK_TEMPLATE.md` as the source of truth for the current framework contract.
+Use `INDEX.md` and `README.md` as the source of truth for the current framework contract.
