@@ -75,6 +75,7 @@ for %%f in (
     VERCEL_DEPLOYMENT.md
     NEW_PROJECT_GUIDE.md
     INDEX.md
+    FRAMEWORK_TEMPLATE.md
 ) do (
     if exist "%SCRIPT_DIR%%%f" copy /Y "%SCRIPT_DIR%%%f" "%ProjectPath%\reference\%%f" >nul
 )
@@ -107,6 +108,7 @@ echo   Location:  %ProjectPath%
 echo   Start here: %ProjectPath%\README.md
 echo   Then run:  .\init.ps1
 echo   Reference: %ProjectPath%\reference\INDEX.md
+echo   Contract:  %ProjectPath%\reference\FRAMEWORK_TEMPLATE.md
 echo ========================================================
 echo.
 echo Recommended next actions:
