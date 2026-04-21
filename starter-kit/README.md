@@ -73,5 +73,5 @@ Output is written to `ui/screenshots/` plus `validation_report.json`.
 
 ## Full Guides
 
-- Root reference: `reference/PORTABLE_FRAMEWORK_TEMPLATE.md`
+- Generated project reference: `reference/INDEX.md`
 - Full walkthrough: `../NEW_PROJECT_GUIDE.md`
