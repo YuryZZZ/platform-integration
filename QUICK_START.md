@@ -54,7 +54,19 @@ cd C:\path\to\your-new-project
 .\init.ps1
 ```
 
-This fills placeholders, checks auth, creates or configures the target GCP/Firebase project, and sets the Git remote.
+Optional automation flags:
+
+```powershell
+.\init.ps1 -CreateProject -EnableApis -InstallDependencies
+```
+
+The initializer now keeps these scopes separate:
+
+- project values: `YOUR_PROJECT_ID`, `YOUR_PROJECT_NAME`, `YOUR_REGION`
+- repo values: `YOUR_GITHUB_OWNER`, `YOUR_REPO`
+- machine-local values: `YOUR_LOCAL_USER`, PATs, API keys, CLI auth state
+
+`YOUR_LOCAL_USER` is the local Windows account name used by MCP file paths. It is not assumed to match the GitHub owner.
 
 ---
 
@@ -64,7 +76,7 @@ Update these local files before first deploy:
 
 - `.env.local`
 - `web/.env.local`
-- `reference/configs/mcp_config.json.reference` copied to your local Antigravity/Gemini MCP config
+- `reference/configs/mcp_config.json.reference` copied to your local Antigravity or Gemini MCP config
 - `docs/PROJECT_SPEC.md`
 - `docs/DESIGN.md`
 
@@ -103,6 +115,7 @@ cd functions\api-gateway
 ## Step 7: Use the reference docs only when needed
 
 - `INDEX.md`: repo contract and starting points
+- `FRAMEWORK_TEMPLATE.md`: portability rules and second-PC contract
 - `NEW_PROJECT_GUIDE.md`: detailed walkthrough
 - `AUTH_FLOW.md`: credential model and token handling
 - `JULES_INTEGRATION.md`: async delegation flow
