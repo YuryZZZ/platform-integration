@@ -95,7 +95,7 @@ if exist "docs\PROJECT_SPEC.md" (
     powershell -NoProfile -ExecutionPolicy Bypass -Command "(Get-Content 'docs\PROJECT_SPEC.md') -replace 'YOUR_PROJECT_NAME', '%ProjectName%' -replace 'Nexus AI Platform', '%ProjectName%' | Set-Content 'docs\PROJECT_SPEC.md'"
 )
 if exist "docs\CURRENT_STATUS.md" (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=(Get-Date -Format 'yyyy-MM-dd'); $c=Get-Content 'docs\CURRENT_STATUS.md'; $c=$c -replace 'YOUR_PROJECT_NAME','%ProjectName%'; $c=$c -replace 'Last Updated: .*','Last Updated: '+$d; Set-Content 'docs\CURRENT_STATUS.md' $c"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=(Get-Date -Format 'yyyy-MM-dd'); $c=Get-Content 'docs\CURRENT_STATUS.md'; $c=$c -replace 'YOUR_PROJECT_NAME','%ProjectName%'; $c=$c -replace '\*\*Last Updated\*\*:\s*.*','**Last Updated**: '+$d; Set-Content 'docs\CURRENT_STATUS.md' $c"
 )
 echo     [OK] docs prepared.
 
