@@ -12,7 +12,7 @@
       "env": {
         "BIGQUERY_PROJECT": "YOUR_GCP_PROJECT_ID",
         "BIGQUERY_LOCATION": "YOUR_BIGQUERY_LOCATION",
-        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\YOUR_USER\\AppData\\Roaming\\gcloud\\application_default_credentials.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\YOUR_LOCAL_USER\\AppData\\Roaming\\gcloud\\application_default_credentials.json"
       }
     },
     "storage": {
@@ -29,7 +29,7 @@
         "@google-cloud/cloud-run-mcp"
       ],
       "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\YOUR_USER\\AppData\\Roaming\\gcloud\\application_default_credentials.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\YOUR_LOCAL_USER\\AppData\\Roaming\\gcloud\\application_default_credentials.json"
       }
     },
     "firebase": {
@@ -41,7 +41,7 @@
       ],
       "env": {
         "IS_GEMINI_CLI_EXTENSION": "true",
-        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\YOUR_USER\\AppData\\Roaming\\gcloud\\application_default_credentials.json"
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:\\Users\\YOUR_LOCAL_USER\\AppData\\Roaming\\gcloud\\application_default_credentials.json"
       }
     },
     "gcloud": {
@@ -54,7 +54,7 @@
     "google-workspace": {
       "command": "node",
       "args": [
-        "C:\\Users\\YOUR_USER\\.gemini\\extensions\\google-workspace\\dist\\index.js",
+        "C:\\Users\\YOUR_LOCAL_USER\\.gemini\\extensions\\google-workspace\\dist\\index.js",
         "--use-dot-names"
       ]
     },
@@ -66,7 +66,7 @@
       ]
     },
     "gke": {
-      "command": "C:\\Users\\YOUR_USER\\.gemini\\extensions\\gke-mcp\\gke-mcp.exe",
+      "command": "C:\\Users\\YOUR_LOCAL_USER\\.gemini\\extensions\\gke-mcp\\gke-mcp.exe",
       "env": {
         "DUMMY_RELOAD": "true"
       }
@@ -94,7 +94,7 @@
       }
     },
     "github": {
-      "command": "C:\\Users\\YOUR_USER\\.gemini\\antigravity\\mcp_servers\\github-mcp-server\\github-mcp-server.exe",
+      "command": "C:\\Users\\YOUR_LOCAL_USER\\.gemini\\antigravity\\mcp_servers\\github-mcp-server\\github-mcp-server.exe",
       "args": [
         "stdio"
       ],
