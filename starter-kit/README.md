@@ -1,6 +1,7 @@
 # Starter Kit - Quick Start
 
 > Copy this folder to start a new project in under 5 minutes.
+> This starter kit is portable only when project values, GitHub values, and machine-local values stay separate.
 
 ## Fastest Path
 
@@ -18,10 +19,8 @@ cd C:\Projects\my-new-project
 # 3. Run the initializer
 .\init.ps1
 
-# 4. Install frontend if the template has not already been materialised
-cd web
-npx -y create-next-app@latest ./ --typescript --eslint --app --src-dir=false --import-alias="@/*" --use-npm --yes
-cd ..
+# 4. Optional: let the initializer automate more steps
+.\init.ps1 -CreateProject -EnableApis -InstallDependencies
 
 # 5. Build and deploy
 cd web
@@ -41,6 +40,16 @@ git add -A
 git commit -m "feat: initial project"
 git push -u origin master
 ```
+
+## Placeholder Rules
+
+Use these placeholder groups consistently:
+
+- `YOUR_PROJECT_ID`, `YOUR_PROJECT_NAME`, `YOUR_REGION`: project identity
+- `YOUR_GITHUB_OWNER`, `YOUR_REPO`: repository identity
+- `YOUR_LOCAL_USER`, API keys, local auth state: one machine only
+
+`YOUR_LOCAL_USER` is the Windows account name used in local MCP file paths. It is not the GitHub username unless both happen to match.
 
 ## What's Inside
 
@@ -75,4 +84,5 @@ Output is written to `ui/screenshots/` plus `validation_report.json`.
 ## Full Guides
 
 - Generated project reference: `reference/INDEX.md`
+- Portable framework contract: `reference/FRAMEWORK_TEMPLATE.md`
 - Full walkthrough: `reference/NEW_PROJECT_GUIDE.md`
