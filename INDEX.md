@@ -1,10 +1,10 @@
-# Platform Integration — Master Index
+# Platform Integration - Master Index
 # The Global Project Template
 
 > **This folder is the reusable template.**
 > Start new projects from the repo root with `start.bat`, then continue inside the generated project with `init.ps1`.
 >
-> Stack: **Nexus UI → Google AI Studio (Gemini) → Jules → Firebase → Antigravity**
+> Stack: **Nexus UI -> Google AI Studio (Gemini) -> Jules -> Firebase -> Antigravity**
 
 ---
 
@@ -13,26 +13,27 @@
 ```text
 platform-integration/
 ├── INDEX.md
-├── start.bat                         # Windows bootstrapper from the template repo root
-├── README.md                         # Full platform overview
-├── PROMPT_TO_PORTAL.md               # Idea → live URL workflow
-├── QUICK_START.md                    # Fastest setup path
-├── NEW_PROJECT_GUIDE.md              # Detailed setup walkthrough
-├── AUTH_FLOW.md                      # Credentials and auth model
-├── JULES_INTEGRATION.md              # Async cloud agent guide
-├── STITCH_DESIGN.md                  # Google Stitch integration
-├── VERCEL_DEPLOYMENT.md              # Alternative deploy target
-├── configs/                          # Reference configs only
-├── scripts/                          # Utility scripts
-├── workflows/                        # Reusable Antigravity workflows
-└── starter-kit/                      # Project skeleton copied into each new app
+├── FRAMEWORK_TEMPLATE.md            # Portable template contract
+├── start.bat                        # Windows bootstrapper from the template repo root
+├── README.md                        # Full platform overview
+├── PROMPT_TO_PORTAL.md              # Idea -> live URL workflow
+├── QUICK_START.md                   # Fastest setup path
+├── NEW_PROJECT_GUIDE.md             # Detailed setup walkthrough
+├── AUTH_FLOW.md                     # Credentials and auth model
+├── JULES_INTEGRATION.md             # Async cloud agent guide
+├── STITCH_DESIGN.md                 # Google Stitch integration
+├── VERCEL_DEPLOYMENT.md             # Alternative deploy target
+├── configs/                         # Reference configs only
+├── scripts/                         # Utility scripts
+├── workflows/                       # Reusable Antigravity workflows
+└── starter-kit/                     # Project skeleton copied into each new app
 ```
 
 ---
 
 ## Start A New Project
 
-### Path A — Template bootstrap
+### Path A - Template bootstrap
 
 ```powershell
 cd C:\path\to\platform-integration
@@ -46,7 +47,7 @@ What this does:
 3. prepares `.env.local` placeholders
 4. personalizes project docs with the chosen name
 
-### Path B — Inside the generated project
+### Path B - Inside the generated project
 
 ```powershell
 cd C:\path\to\your-new-project
@@ -63,7 +64,8 @@ A file is portable only if it follows these rules:
 - no real local usernames unless clearly marked as placeholders
 - no instructions that depend on one machine-specific folder layout
 - no bootstrap step should point to a file that is not actually created
-- all MCP examples must use `YOUR_*` placeholders for local replacement
+- all MCP examples must use placeholder values for local replacement
+- `YOUR_LOCAL_USER` and `YOUR_GITHUB_OWNER` are different scopes and must not be merged
 
 Use `configs/mcp_config.json.reference` as a local template, not as a committed live config.
 
@@ -74,6 +76,7 @@ Use `configs/mcp_config.json.reference` as a local template, not as a committed 
 | Need | Document |
 | ---- | -------- |
 | Bootstrap a new project | `QUICK_START.md` |
+| Portable template contract | `FRAMEWORK_TEMPLATE.md` |
 | Full setup walkthrough | `NEW_PROJECT_GUIDE.md` |
 | Full platform architecture | `README.md` |
 | Auth and credentials | `AUTH_FLOW.md` |
@@ -106,4 +109,4 @@ The expected happy path is now:
 2. open the generated project
 3. read `README.md` in the generated project
 4. run `init.ps1`
-5. use `reference/INDEX.md` and `reference/configs/mcp_config.json.reference` for machine-local setup
+5. use `reference/INDEX.md`, `reference/FRAMEWORK_TEMPLATE.md`, and `reference/configs/mcp_config.json.reference` for machine-local setup
