@@ -11,7 +11,7 @@ A committed template file must never require one specific machine, username, pro
 
 Safe in repo:
 
-- placeholders such as `YOUR_USER`, `YOUR_PROJECT_ID`, `YOUR_STITCH_API_KEY`
+- placeholders such as `YOUR_PROJECT_ID`, `YOUR_GITHUB_OWNER`, `YOUR_LOCAL_USER`, `YOUR_STITCH_API_KEY`
 - Firebase web SDK config examples marked as examples
 - MCP reference files that require local replacement
 
@@ -22,6 +22,21 @@ Never commit:
 - `.env.local`
 - local ADC files
 - personal Windows paths with real usernames unless clearly shown as placeholders
+
+---
+
+## Identity Split
+
+These values are different and must stay different:
+
+| Placeholder | Meaning |
+| --- | --- |
+| `YOUR_GITHUB_OWNER` | GitHub user or org that owns the repo |
+| `YOUR_REPO` | repository name |
+| `YOUR_LOCAL_USER` | local Windows account used in filesystem paths |
+| `YOUR_PROJECT_ID` | Firebase / GCP project id |
+
+Do not replace `YOUR_LOCAL_USER` with the GitHub owner unless both values truly match on that machine.
 
 ---
 
@@ -145,7 +160,7 @@ Example local-only MCP snippet:
 ```json
 {
   "github": {
-    "command": "C:\\Users\\YOUR_USER\\.gemini\\antigravity\\mcp_servers\\github-mcp-server\\github-mcp-server.exe",
+    "command": "C:\\Users\\YOUR_LOCAL_USER\\.gemini\\antigravity\\mcp_servers\\github-mcp-server\\github-mcp-server.exe",
     "args": ["stdio"],
     "env": {
       "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_PAT"
@@ -183,7 +198,7 @@ Template rule:
 Portable example path pattern:
 
 ```text
-C:\Users\YOUR_USER\AppData\Roaming\gcloud\application_default_credentials.json
+C:\Users\YOUR_LOCAL_USER\AppData\Roaming\gcloud\application_default_credentials.json
 ```
 
 Not portable:
