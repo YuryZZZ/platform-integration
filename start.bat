@@ -105,7 +105,7 @@ echo ========================================================
 echo   SUCCESS: %ProjectName% is ready for Antigravity
 echo ========================================================
 echo   Location:  %ProjectPath%
-echo   Start here: %ProjectPath%\starter-kit\README.md
+echo   Start here: %ProjectPath%\README.md
 echo   Then run:  .\init.ps1
 echo   Reference: %ProjectPath%\reference\PORTABLE_FRAMEWORK_TEMPLATE.md
 echo ========================================================
