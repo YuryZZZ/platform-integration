@@ -23,10 +23,11 @@ It is a framework repo, not a live-project credential dump.
 ## Start Here
 
 1. Read `INDEX.md` for the current repo contract.
-2. Run `start.bat` from the repository root.
-3. Open the generated project folder.
-4. Run `init.ps1`.
-5. Fill local config only: `.env.local`, `web/.env.local`, and local MCP settings.
+2. Read `FRAMEWORK_TEMPLATE.md` for the portability contract.
+3. Run `start.bat` from the repository root.
+4. Open the generated project folder.
+5. Run `init.ps1`.
+6. Fill local config only: `.env.local`, `web/.env.local`, and local MCP settings.
 
 See also:
 
@@ -58,6 +59,7 @@ Committed framework files must stay portable:
 - no one-user Windows paths unless marked as placeholders
 - no bootstrap steps that point to files that are not created
 - no committed docs that assume one personal project id or account
+- no committed file may treat the GitHub owner and local Windows username as the same thing
 
 ---
 
@@ -71,6 +73,7 @@ Committed framework files must stay portable:
 | `scripts/` | utility scripts |
 | `workflows/` | reusable Antigravity workflows |
 | `INDEX.md` | repo contract and navigation |
+| `FRAMEWORK_TEMPLATE.md` | portability contract and second-PC rules |
 | `AUTH_FLOW.md` | portable auth model |
 | `NEW_PROJECT_GUIDE.md` | detailed walkthrough |
 | `PROMPT_TO_PORTAL.md` | idea-to-live flow |
@@ -102,7 +105,7 @@ The generated project is expected to contain:
 
 These belong in local configuration, not the repository:
 
-- `YOUR_USER`
+- `YOUR_LOCAL_USER`
 - `YOUR_PROJECT_ID`
 - `YOUR_REGION`
 - `YOUR_GITHUB_PAT`
@@ -121,6 +124,7 @@ The framework is healthy when all of these are true:
 - `start.bat` can run from any folder where this repo is cloned
 - generated projects include `init.ps1`
 - generated projects include `reference/INDEX.md`
+- generated projects include `reference/FRAMEWORK_TEMPLATE.md`
 - committed docs no longer depend on one live project or one machine path
 - MCP reference files use placeholders only
 - a second PC can bootstrap without editing committed framework files first
@@ -130,6 +134,7 @@ The framework is healthy when all of these are true:
 ## Related Docs
 
 - `INDEX.md` for the current contract
+- `FRAMEWORK_TEMPLATE.md` for the portability rules
 - `QUICK_START.md` for the shortest path
 - `NEW_PROJECT_GUIDE.md` for the longer walkthrough
 - `AUTH_FLOW.md` for credentials and token handling
