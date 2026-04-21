@@ -1,194 +1,120 @@
-# Quick Start: New Project Setup
+# Quick Start
 
-> Full stack: **Nexus UI → Antigravity → Jules → Firebase**
-> From zero to live in < 2 hours.
+> Fastest path: clone `platform-integration`, run `start.bat`, then continue inside the generated project with `init.ps1`.
 
 ---
 
 ## Prerequisites
 
-- [ ] **Node.js** 18+ → `node --version`
-- [ ] **Git** configured → `git config user.name`
-- [ ] **Google Cloud SDK** → `gcloud --version`
-- [ ] **Firebase CLI** → `npm install -g firebase-tools`
-- [ ] **Antigravity IDE** installed
-- [ ] **Jules API key** (optional but recommended) → https://jules.google.com → Settings → API Keys
-- [ ] **Jules GitHub App** installed on your repo → https://github.com/apps/jules-by-google
+- Node.js 18+
+- Git configured
+- Google Cloud SDK installed
+- Firebase CLI installed
+- Antigravity installed
+- Optional: Jules API key and GitHub App access
 
 ---
 
-## Step 1: Authenticate Everything (5 min)
+## Step 1: Authenticate the machine
 
 ```powershell
-# 1. Google Cloud
 gcloud auth login
 gcloud auth application-default login
-
-# 2. Firebase
 firebase login
+```
 
-# 3. GitHub (verify SSH)
+Optional GitHub SSH verification:
+
+```powershell
 ssh -T git@github.com
-# If fails: ssh-keygen -t ed25519 && cat ~/.ssh/id_ed25519.pub
-# Add the key at https://github.com/settings/keys
-
-# 4. Verify auth
-gcloud config list --format="value(core.project)"
-firebase projects:list
 ```
 
 ---
 
-## Step 2: Create GitHub Repository (2 min)
+## Step 2: Bootstrap a new project from this repo
 
 ```powershell
-mkdir my-new-project && cd my-new-project
-git init
-git branch -M master
-
-# Create initial structure
-mkdir -p web/app functions docs/tasks docs/platform-integration ui .agents/workflows .github/workflows specs
+cd C:\path\to\platform-integration
+.\start.bat
 ```
+
+What `start.bat` does:
+
+1. Copies `starter-kit/` into a new project folder.
+2. Copies the reusable platform docs into `reference/`.
+3. Creates local env placeholders.
+4. Personalizes the starter docs with the project name.
 
 ---
 
-## Step 3: Create GCP + Firebase Project (3 min)
+## Step 3: Initialize the generated project
 
 ```powershell
-# Option A: Create new GCP project + Firebase
-gcloud projects create my-project-id --name="My Project"
-firebase projects:addfirebase my-project-id
-
-# Option B: Use existing GCP project
-firebase projects:addfirebase <EXISTING_PROJECT_ID>
-
-# Register a web app
-firebase apps:create WEB "my-dashboard" --project <PROJECT_ID>
+cd C:\path\to\your-new-project
+.\init.ps1
 ```
+
+This fills placeholders, checks auth, creates or configures the target GCP/Firebase project, and sets the Git remote.
 
 ---
 
-## Step 4: Initialize Firebase Hosting (2 min)
+## Step 4: Fill local-only config
 
-```powershell
-# Create firebase.json
-@'
-{
-  "hosting": {
-    "public": "web/out",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "cleanUrls": true,
-    "trailingSlash": false
-  }
-}
-'@ | Set-Content firebase.json
+Update these local files before first deploy:
 
-# Create .firebaserc
-@'
-{
-  "projects": {
-    "default": "<PROJECT_ID>"
-  }
-}
-'@ | Set-Content .firebaserc
-```
+- `.env.local`
+- `web/.env.local`
+- `reference/configs/mcp_config.json.reference` copied to your local Antigravity/Gemini MCP config
+- `docs/PROJECT_SPEC.md`
+- `docs/DESIGN.md`
 
 ---
 
-## Step 5: Create Next.js Frontend (5 min)
+## Step 5: Build and validate
 
 ```powershell
 cd web
-npx -y create-next-app@latest ./ --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*" --use-npm
-
-# Configure for static export
-@'
-import type { NextConfig } from "next";
-const nextConfig: NextConfig = { output: "export" };
-export default nextConfig;
-'@ | Set-Content next.config.ts
-
-# Build
-npx next build
+npm install
+npm run build
+cd ..\ui
+npm install
+npx playwright install chromium
+node validate-parallel.js --url https://YOUR_PROJECT_ID.web.app
 ```
 
 ---
 
-## Step 6: Deploy to Firebase (1 min)
+## Step 6: Deploy
 
 ```powershell
 cd ..
-npx firebase-tools deploy --only hosting --project <PROJECT_ID>
-
-# Visit: https://<PROJECT_ID>.web.app
+npx firebase-tools deploy --only hosting --project YOUR_PROJECT_ID
 ```
 
----
-
-## Step 7: Connect Lovable (3 min)
-
-1. Go to https://lovable.dev → Create project
-2. Design your UI components
-3. Settings → Integrations → Connect to GitHub
-4. Select your repo
-5. Lovable creates a PR with UI code
-6. Pull, review, merge:
-   ```powershell
-   git pull origin master
-   cd web && npx next build
-   cd .. && npx firebase-tools deploy --only hosting
-   ```
-
----
-
-## Step 8: Set Up E2E Testing (3 min)
+If you are using backend services, deploy each one from its own folder:
 
 ```powershell
-cd ui
-npm init -y
-npm install playwright
-
-# Create test script (see ../docs/platform-integration/README.md for template)
-# Run:
-node validate.js
+cd functions\api-gateway
+.\deploy.ps1
 ```
 
 ---
 
-## Step 9: Set Up Documentation (2 min)
+## Step 7: Use the reference docs only when needed
 
-```powershell
-# Create status file
-echo "# Project Status`n`nLast Updated: $(Get-Date -Format 'yyyy-MM-dd')" > docs/CURRENT_STATUS.md
-
-# Create task tracker
-echo "# Tasks`n`n## TASK-001: Initial Setup`n**Status**: ✅ DONE" > docs/tasks/TASK-001.md
-
-# Create deployment log
-echo "# Deployments`n`n## $(Get-Date -Format 'yyyy-MM-dd')`n- Initial deploy" > docs/deployments.md
-```
+- `INDEX.md`: repo contract and starting points
+- `NEW_PROJECT_GUIDE.md`: detailed walkthrough
+- `AUTH_FLOW.md`: credential model and token handling
+- `JULES_INTEGRATION.md`: async delegation flow
+- `STITCH_DESIGN.md`: Stitch design workflow
 
 ---
 
-## Step 10: Push to GitHub (1 min)
+## Done When
 
-```powershell
-git add -A
-git commit -m "feat: initial project setup with Firebase + Next.js + Lovable"
-git remote add origin git@github.com:<USER>/<REPO>.git
-git push -u origin master
-```
-
----
-
-## Total Setup Time: ~25 minutes
-
-After these steps, you have:
-
-- ✅ GitHub repo with Next.js frontend
-- ✅ Firebase Hosting with auto-deploy
-- ✅ Lovable connected for UI design
-- ✅ Antigravity IDE ready for coding
-- ✅ E2E testing framework
-- ✅ Documentation structure
-- ✅ Task tracking system
+- The generated project opens in Antigravity
+- `init.ps1` completes cleanly
+- `.env.local` values are filled
+- `npm run build` succeeds
+- Hosting deploy succeeds
+- No repo-owned file still needs a hardcoded local username or path
