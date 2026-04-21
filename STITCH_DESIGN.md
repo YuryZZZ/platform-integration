@@ -92,7 +92,7 @@ to read design tokens, generate screens, and apply design systems programmatical
       "@_davideast/stitch-mcp"
     ],
     "env": {
-      "STITCH_API_KEY": "your-stitch-api-key-here"
+      "STITCH_API_KEY": "YOUR_STITCH_API_KEY"
     },
     "timeout": 60000,
     "trust": true
@@ -117,15 +117,15 @@ Add to [configs/mcp_config.json.reference](./configs/mcp_config.json.reference):
   "command": "npx",
   "args": ["-y", "@_davideast/stitch-mcp"],
   "env": {
-    "STITCH_API_KEY": "your-stitch-api-key-here"
+    "STITCH_API_KEY": "YOUR_STITCH_API_KEY"
   },
   "timeout": 60000,
   "trust": true
 }
 ```
 
-> **Critical**: Use the **absolute path** to `npx` if Antigravity can't find it.
-> On Windows: `C:\\Users\\yuryz\\AppData\\Roaming\\npm\\npx.cmd`
+> **Critical**: Use the absolute path to `npx` only if Antigravity cannot resolve `npx` from `PATH`.
+> Portable placeholder example on Windows: `C:\Users\YOUR_USER\AppData\Roaming\npm\npx.cmd`
 
 ### Available MCP Tools
 
