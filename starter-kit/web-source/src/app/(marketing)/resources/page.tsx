@@ -1,162 +1,157 @@
-'use client';
-
-/**
- * Resources Page — Documentation, API, tutorials, and blog
- *
- * Created: 2026-03-19T18:23:00Z
- * Refactored: 2026-03-31 — Tailwind only, CSS variables, no inline styles
- */
-
+import type { Metadata } from 'next';
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Book, Code, Video, ExternalLink, Newspaper } from 'lucide-react';
 import { Section } from '@/components/layout/Section';
+import { ContentGrid } from '@/components/layout/ContentGrid';
+import { Newspaper, ArrowRight, Calendar, Clock } from 'lucide-react';
+import NewsletterForm from './NewsletterForm';
 
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+export const metadata: Metadata = {
+  title: 'Resources & Blog',
+  description: 'Guides, tutorials, and the latest news from the Nexus AI team.',
 };
 
-const resourceSections = [
-  {
-    icon: Book,
-    title: 'Documentation',
-    desc: 'Comprehensive guides for every feature',
-    items: [
-      { title: 'Getting Started Guide', desc: 'Set up your account and first workflow in 5 minutes', tag: 'Beginner' },
-      { title: 'AI Chat Integration', desc: 'Multi-model routing, streaming, and RAG retrieval', tag: 'Feature' },
-      { title: 'Voice Interface Setup', desc: 'Push-to-talk configuration and language support', tag: 'Feature' },
-      { title: 'Workflow Builder Guide', desc: 'Visual builder, conditions, retries, and approvals', tag: 'Feature' },
-    ],
-  },
-  {
-    icon: Code,
-    title: 'API Reference',
-    desc: 'REST API documentation with examples',
-    items: [
-      { title: 'Authentication API', desc: 'JWT tokens, session management, and SSO', tag: 'Auth' },
-      { title: 'Chat API', desc: 'Send messages, stream responses, manage conversations', tag: 'AI' },
-      { title: 'Knowledge Base API', desc: 'Upload docs, query embeddings, manage sources', tag: 'AI' },
-      { title: 'Workflows API', desc: 'Create, execute, and monitor workflows', tag: 'Core' },
-    ],
-  },
-  {
-    icon: Video,
-    title: 'Video Tutorials',
-    desc: 'Watch and learn from step-by-step walkthroughs',
-    items: [
-      { title: 'Platform Overview', desc: '10-minute tour of all Nexus AI capabilities', tag: '10 min' },
-      { title: 'Building Your First Workflow', desc: 'Drag-and-drop workflow creation tutorial', tag: '8 min' },
-      { title: 'Voice Command Setup', desc: 'Configure voice interface for your team', tag: '5 min' },
-      { title: 'Enterprise Security Deep Dive', desc: 'RLS, audit trails, and GDPR compliance', tag: '15 min' },
-    ],
-  },
-];
+const categories = ['All', 'Case Studies', 'Guides', 'News'];
 
 const blogPosts = [
-  { title: 'Introducing Multi-Surface AI', desc: 'How Nexus adapts across 4 device types', date: 'Mar 15, 2026', tag: 'Product' },
-  { title: 'RAG Retrieval Best Practices', desc: 'Optimize your knowledge base for accurate answers', date: 'Mar 10, 2026', tag: 'Engineering' },
-  { title: 'SOC 2 Type II: Our Journey', desc: 'What we learned getting SOC 2 certified', date: 'Mar 5, 2026', tag: 'Security' },
+  {
+    title: 'Introducing Multi-Surface AI',
+    excerpt: 'How Nexus AI adapts across 4 device types to provide a seamless experience.',
+    category: 'News',
+    readTime: '5 min',
+    date: 'Mar 15, 2026',
+  },
+  {
+    title: 'RAG Retrieval Best Practices',
+    excerpt: 'Optimize your knowledge base for accurate answers and lower latency.',
+    category: 'Guides',
+    readTime: '8 min',
+    date: 'Mar 10, 2026',
+  },
+  {
+    title: 'Enterprise Security Deep Dive',
+    excerpt: 'How we handle RLS, audit trails, and GDPR compliance at scale.',
+    category: 'Guides',
+    readTime: '12 min',
+    date: 'Mar 5, 2026',
+  },
+  {
+    title: 'Global Retailer Scales with Nexus',
+    excerpt: 'Case study: How a Fortune 500 retailer automated 70% of customer support.',
+    category: 'Case Studies',
+    readTime: '10 min',
+    date: 'Feb 28, 2026',
+  },
+  {
+    title: 'The Future of Agentic Workflows',
+    excerpt: 'Exploring the shift from simple automation to autonomous AI agents.',
+    category: 'News',
+    readTime: '7 min',
+    date: 'Feb 20, 2026',
+  },
+  {
+    title: 'Optimizing Token Usage in LLMs',
+    excerpt: 'Practical tips to reduce costs without sacrificing response quality.',
+    category: 'Guides',
+    readTime: '6 min',
+    date: 'Feb 12, 2026',
+  },
 ];
 
 export default function ResourcesPage() {
   return (
-    <>
-      {/* ─── Hero ──────────────────────────────── */}
-      <section className="py-32 px-4 sm:py-20 text-center">
-        <motion.div {...fadeUp} className="max-w-2xl mx-auto">
-          <h1 className="text-5xl sm:text-6xl font-extrabold leading-tight tracking-tight mb-4">
-            <span className="text-gradient">Resources</span> & learning
+    <main>
+      {/* ─── Hero Section ──────────────────────── */}
+      <section className="py-24 px-4 text-center bg-[var(--color-bg-subtle)]">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-6">
+            <span className="text-gradient">Resources</span> & Insights
           </h1>
-          <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-            Guides, tutorials, and references to help you get the most out of Nexus AI.
+          <p className="text-xl text-[var(--color-text-secondary)] leading-relaxed">
+            Everything you need to master Nexus AI, from deep-dive guides to the latest product updates.
           </p>
-        </motion.div>
+        </div>
       </section>
 
-      {/* ─── Resource Sections ──────────────────── */}
-      {resourceSections.map((sec, si) => (
-        <Section key={sec.title} variant={si % 2 === 0 ? 'default' : 'alternate'} padding="lg">
-          <div className="feature">
-            <motion.div {...fadeUp} className="flex items-center gap-3 mb-6">
-              <sec.icon size={24} className="text-[var(--color-primary)] flex-shrink-0" />
-              <div>
-                <h2 className="text-xl font-bold">{sec.title}</h2>
-                <p className="text-sm text-[var(--color-text-secondary)]">{sec.desc}</p>
-              </div>
-            </motion.div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {sec.items.map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  whileHover={{ y: -2 }}
-                  className="p-5 bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] cursor-pointer hover:shadow-md transition-shadow flex flex-col gap-2"
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-[var(--color-primary)] bg-[var(--color-primary-light)] px-2 py-1 rounded-full">
-                      {item.tag}
-                    </span>
-                    <ExternalLink size={14} className="text-[var(--color-text-muted)]" />
-                  </div>
-                  <h3 className="text-sm font-semibold text-[var(--color-text)]">{item.title}</h3>
-                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                    {item.desc}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </Section>
-      ))}
-
-      {/* ─── Blog Section ──────────────────────── */}
-      <Section variant="default" padding="xl">
-        <div className="feature">
-          <motion.div {...fadeUp} className="flex items-center gap-3 mb-6">
-            <Newspaper size={24} className="text-[var(--color-primary)] flex-shrink-0" />
-            <div>
-              <h2 className="text-xl font-bold">Latest from the blog</h2>
-              <p className="text-sm text-[var(--color-text-secondary)]">Product updates, engineering insights, and best practices</p>
-            </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post, i) => (
-              <motion.div
-                key={post.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.4 }}
-                whileHover={{ y: -4 }}
-                className="p-6 bg-[var(--color-bg-subtle)] rounded-xl border border-[var(--color-border)] cursor-pointer hover:shadow-lg transition-shadow"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <span className="text-xs font-semibold text-[var(--color-primary)]">
-                    {post.tag}
-                  </span>
-                  <span className="text-xs text-[var(--color-text-muted)]">
-                    {post.date}
-                  </span>
-                </div>
-                <h3 className="text-base font-semibold text-[var(--color-text)] mb-2">
-                  {post.title}
-                </h3>
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                  {post.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+      {/* ─── Filters ───────────────────────────── */}
+      <Section variant="default" padding="sm">
+        <div className="flex flex-wrap justify-center gap-2">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
+                cat === 'All'
+                  ? 'bg-[var(--color-primary)] text-white'
+                  : 'bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)]'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
       </Section>
-    </>
+
+      {/* ─── Blog Grid ─────────────────────────── */}
+      <Section variant="default" padding="lg">
+        <ContentGrid>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogPosts.map((post, i) => (
+              <article
+                key={i}
+                className="group flex flex-col bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="aspect-video bg-[var(--color-bg-subtle)] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[var(--color-primary)] text-xs font-bold rounded-full uppercase tracking-wider">
+                      {post.category}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex items-center gap-4 text-xs text-[var(--color-text-muted)] mb-3">
+                    <div className="flex items-center gap-1">
+                      <Calendar size={14} />
+                      {post.date}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock size={14} />
+                      {post.readTime}
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-[var(--color-primary)] transition-colors">
+                    {post.title}
+                  </h3>
+
+                  <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-6 flex-1">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="mt-auto pt-6 border-t border-[var(--color-border)]">
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] group-hover:gap-3 transition-all">
+                      Read Article
+                      <ArrowRight size={16} />
+                    </span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </ContentGrid>
+      </Section>
+
+      {/* ─── Newsletter ────────────────────────── */}
+      <Section variant="alternate" padding="xl">
+        <div className="max-w-4xl mx-auto text-center">
+          <Newspaper className="w-12 h-12 text-[var(--color-primary)] mx-auto mb-6" />
+          <h2 className="text-3xl font-bold mb-4">Stay updated</h2>
+          <p className="text-[var(--color-text-secondary)] mb-8 max-w-lg mx-auto">
+            Get the latest guides and product updates delivered straight to your inbox.
+          </p>
+          <NewsletterForm />
+        </div>
+      </Section>
+    </main>
   );
 }
